@@ -1,0 +1,29 @@
+{
+  "name": "robot-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/infrastructure/web/server.js",
+    "start:http": "node src/infrastructure/web/server.http.js",
+    "test:http": "node test_http.js",
+    "seed": "node scripts/seed.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/multer": "^4.0.0",
+    "@koa/router": "^15.5.0",
+    "axios": "^1.16.0",
+    "dotenv": "^17.4.2",
+    "ioredis": "^5.10.1",
+    "koa": "^3.2.0",
+    "koa-bodyparser": "^4.4.1",
+    "mongoose": "^9.6.1",
+    "multer": "^2.1.1",
+    "winston": "^3.19.0",
+    "ws": "^8.20.0"
+  }
+}

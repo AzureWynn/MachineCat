@@ -1,0 +1,51 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Archives
+*.zip
+*.rar
+*.tar.gz
+
+# Python source code directory
+python版源码/
+
+# Arduino IDE source code
+arduino IDE版源代码/
+
+# Mixly graphical source code
+mixly版图形化源代码/
+
+# Archive directory
+归档/
+
+# Baidu download files
+*.baiduyun.p.downloading
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Environment variables (sensitive)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Firmware directory (if exists)
+firmware/
+
+# Database files
+data/
+*.db
