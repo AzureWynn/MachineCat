@@ -49,3 +49,10 @@ firmware/
 # Database files
 data/
 *.db
+
+# Node.js dependencies
+node_modules/
+
+# Build output
+build/
+dist/
