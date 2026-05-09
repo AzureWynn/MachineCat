@@ -2,27 +2,38 @@ const axios = require('axios');
 
 class LLMClient {
   constructor() {
-    this.apiUrl = process.env.LLM_API_URL || 'http://localhost:11434/api/generate';
-    this.model = process.env.LLM_MODEL || 'gemma4:latest';
+    this.apiUrl = process.env.LLM_API_URL || 'http://ollama:11434/api/generate';
+    this.model = process.env.LLM_MODEL || 'qwen2.5:0.5b';
     this.useMock = process.env.USE_LLM_MOCK === 'true';
+
+    console.log(`[LLM] API URL: ${this.apiUrl}`);
+    console.log(`[LLM] Model: ${this.model}`);
+    console.log(`[LLM] Use Mock: ${this.useMock}`);
   }
 
   async generateResponse(prompt) {
     if (this.useMock) {
+      console.log('[LLM] Using mock mode (USE_LLM_MOCK=true)');
       return this.mockGenerateResponse(prompt);
     }
 
     try {
+      console.log(`[LLM] Calling API: ${this.apiUrl} with model: ${this.model}`);
       const response = await axios.post(this.apiUrl, {
         model: this.model,
         prompt: prompt,
         stream: false,
-      });
+      }, { timeout: 120000 });
 
+      console.log(`[LLM] Response received, length: ${response.data.response?.length || 0}`);
       return response.data.response;
     } catch (error) {
-      console.error('LLM API Error:', error.message);
-      console.log('Falling back to mock response...');
+      console.error(`[LLM] API Error: ${error.message}`);
+      if (error.response) {
+        console.error(`[LLM] Response status: ${error.response.status}`);
+        console.error(`[LLM] Response data: ${JSON.stringify(error.response.data)}`);
+      }
+      console.log('[LLM] Falling back to mock response...');
       return this.mockGenerateResponse(prompt);
     }
   }

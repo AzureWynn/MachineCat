@@ -3,7 +3,7 @@
 > 生成时间：2026-05-10
 > 项目：buzhai - 跨链隐私支付智能机器猫平台
 > GitHub：https://github.com/AzureWynn/MachineCat
-> 在线演示：https://bureau-readings-media-changelog.trycloudflare.com
+> 在线演示：https://timeline-transform-volumes-rated.trycloudflare.com
 
 ---
 
@@ -32,7 +32,7 @@
 | 要求 | 状态 | 说明 |
 |------|------|------|
 | 演示视频（3分钟以内） | 📹 即将发布 | 演示视频录制中 |
-| 在线演示链接 | ✅ **完全符合** | 已部署：https://bureau-readings-media-changelog.trycloudflare.com |
+| 在线演示链接 | ✅ **完全符合** | 已部署：https://timeline-transform-volumes-rated.trycloudflare.com |
 
 ---
 
@@ -49,7 +49,7 @@
 ### 2.2 演示要求
 | 要求 | 状态 | 说明 |
 |------|------|------|
-| 可运行的演示或清晰的录制教程 | ✅ **完全符合** | 已部署到 Cloudflare Tunnel：https://bureau-readings-media-changelog.trycloudflare.com |
+| 可运行的演示或清晰的录制教程 | ✅ **完全符合** | 已部署：https://timeline-transform-volumes-rated.trycloudflare.com |
 | 简化用户体验 | ✅ **完全符合** | 前端有完整 UI，支持 Phantom 钱包连接、一键支付 |
 
 ### 2.3 Solana 核心性

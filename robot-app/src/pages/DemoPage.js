@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store';
 import { Connection, Transaction } from '@solana/web3.js';
 import { Buffer } from 'buffer';
@@ -7,8 +8,8 @@ const API_BASE = '/api';
 const SOLANA_RPC_URL = 'https://devnet.helius-rpc.com/?api-key=d4f1dbe4-60c7-4b9d-bada-17cfac55e1c1';
 
 function DemoPage() {
+  const navigate = useNavigate();
   const currentRobotId = useStore((state) => state.currentRobotId);
-  
   const chatMessagesRef = useRef(null);
   const [robotState, setRobotState] = useState(null);
   const [quest, setQuest] = useState(null);
@@ -24,6 +25,12 @@ function DemoPage() {
   const [paymentModeInfo, setPaymentModeInfo] = useState(null);
 
   useEffect(() => {
+    if (!currentRobotId) {
+      navigate('/personality');
+    }
+  }, [currentRobotId, navigate]);
+
+  useEffect(() => {
     if (currentRobotId) {
       fetchRobotState();
       fetchPaymentMode();
@@ -36,6 +43,10 @@ function DemoPage() {
       chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
     }
   }, [messages]);
+
+  if (!currentRobotId) {
+    return null;
+  }
 
   const fetchPaymentMode = async () => {
     try {
