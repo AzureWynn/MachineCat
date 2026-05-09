@@ -11,23 +11,20 @@ import DemoPage from './pages/DemoPage';
 // import VoiceTestPage from './pages/VoiceTestPage';
 
 function App() {
-  const initWebSocket = useStore((state) => state.initWebSocket);
+  // const initWebSocket = useStore((state) => state.initWebSocket);
 
-  useEffect(() => {
-    initWebSocket();
-    return () => {
-      const disconnect = useStore.getState().disconnectWebSocket;
-      disconnect();
-    };
-  }, [initWebSocket]);
+  // useEffect(() => {
+  //   initWebSocket();
+  //   return () => {
+  //     const disconnect = useStore.getState().disconnectWebSocket;
+  //     disconnect();
+  //   };
+  // }, [initWebSocket]);
 
   return (
     <BrowserRouter>
       <div style={styles.app}>
         <Navbar />
-        <div style={styles.statusBar}>
-          <RobotStatus />
-        </div>
         <main style={styles.main}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -35,7 +32,6 @@ function App() {
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/control" element={<ControlPage />} />
             <Route path="/demo" element={<DemoPage />} />
-            {/* <Route path="/voice-test" element={<VoiceTestPage />} /> */}
           </Routes>
         </main>
       </div>
@@ -46,10 +42,7 @@ function App() {
 const styles = {
   app: {
     minHeight: '100vh',
-    backgroundColor: '#fafafa',
-  },
-  statusBar: {
-    padding: '10px 20px',
+    backgroundColor: '#ffffff',
   },
   main: {
     maxWidth: '1200px',

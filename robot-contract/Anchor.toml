@@ -15,7 +15,7 @@ robot_contract = "ARjXV5jAyB1t53WE4c3eEf6gftFnF7aiympwBCfSvVoY"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "devnet"
+cluster = "https://devnet.helius-rpc.com/?api-key=d4f1dbe4-60c7-4b9d-bada-17cfac55e1c1"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

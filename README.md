@@ -1,10 +1,14 @@
-# 🤖 机器猫 - 机器猫个性化智能交互平台
+# 🤖 buzhai - 跨链隐私支付智能机器猫平台
 
 > 赋予每个物理机器猫独一无二的"灵魂"——能听、会说、会动，且所有行为和语言都与其设定的"人设"高度统一。
+> 
+> **黑客松特别版**：集成 Solana 链上状态管理 + LI.FI 跨链桥 + MagicBlock 隐私交易 + x402 自主代理支付
 
 ## 📖 项目简介
 
 机器猫是一个高度个性化、可扩展的智能机器猫交互平台。通过软件定义，我们为机器猫赋予名字、种类、品种和可定制的性格特征，并结合大型语言模型（LLM）实现真正的情感化智能交互。
+
+**黑客松亮点**：实现"AI 任务生成 → 用户确认 → 跨链支付 → 链上状态更新"的完整闭环，展示 Agent 跨链隐私支付的实际应用场景。
 
 ### ✨ 核心特性
 
@@ -14,6 +18,10 @@
 - **📡 实时通信**：基于 WebSocket 的双向实时通信，支持状态监控和指令下发
 - **🔋 状态监控**：实时显示机器猫在线状态、电池电量等信息
 - **🎮 虚拟模拟器**：支持虚拟机器猫模拟，无需硬件即可完整开发和测试
+- **⛓️ Solana 链上状态**：机器猫状态数据存储在 Solana 链上，支持多用户隔离
+- **🌉 跨链支付**：集成 LI.FI 跨链桥，支持多链资产转移
+- **🔒 隐私保护**：使用 MagicBlock PER 协议实现隐私交易
+- **🤖 自主代理支付**：x402 协议支持 AI 代理自主执行支付
 
 ## 🏗️ 系统架构
 
@@ -57,7 +65,8 @@ MachineCat/
 │   │   │   ├── Home.js          # 首页
 │   │   │   ├── PersonalityPage.js  # 个性设置页
 │   │   │   ├── ChatPage.js      # 聊天页
-│   │   │   └── ControlPage.js   # 控制台页
+│   │   │   ├── ControlPage.js   # 控制台页
+│   │   │   └── DemoPage.js      # Demo（跨链支付）
 │   │   ├── services/            # API 和 WebSocket 服务
 │   │   └── store/               # Zustand 状态管理
 │   └── package.json
@@ -71,15 +80,29 @@ MachineCat/
 │   │   │   ├── ai-interaction/       # AI 交互上下文
 │   │   │   │   ├── application/      # 交互服务
 │   │   │   │   └── infrastructure/   # LLM 客户端
-│   │   │   └── robot-control/        # 机器猫控制上下文
-│   │   │       ├── domain/           # 机器猫聚合根
-│   │   │       └── infrastructure/   # WebSocket/HTTP/蓝牙连接器
+│   │   │   ├── robot-control/        # 机器猫控制上下文
+│   │   │   │   ├── domain/           # 机器猫聚合根
+│   │   │   │   └── infrastructure/   # WebSocket/HTTP/蓝牙连接器
+│   │   │   └── blockchain/           # 区块链服务（新增）
+│   │   │       ├── solana.service.js     # Solana 合约交互
+│   │   │       ├── payment.service.js    # 跨链支付服务
+│   │   │       └── robot_contract.json   # 合约 IDL
 │   │   └── infrastructure/      # 全局基础设施
 │   │       ├── database/        # 数据库连接
 │   │       └── web/             # Koa Web 服务
 │   ├── scripts/                 # 数据库种子脚本
 │   ├── virtual_robot.js         # 虚拟机器猫模拟器
 │   └── package.json
+│
+├── robot-contract/               # Solana 智能合约（新增）
+│   ├── programs/
+│   │   └── robot-contract/
+│   │       └── src/
+│   │           └── lib.rs        # 合约主代码（Rust/Anchor）
+│   ├── tests/
+│   │   └── robot-contract.ts     # 合约测试
+│   ├── Anchor.toml               # Anchor 配置
+│   └── README.md                 # 合约文档
 │
 ├── complete_project_analysis_v4.md  # 技术实现蓝图
 └── development_plan.md              # 开发计划
@@ -95,6 +118,7 @@ MachineCat/
 - **缓存**: Redis (ioredis)
 - **日志**: Winston
 - **架构模式**: 领域驱动设计 (DDD)
+- **区块链集成**: @solana/web3.js, @coral-xyz/anchor
 
 ### 前端 (robot-app)
 - **UI 框架**: React 19
@@ -102,11 +126,18 @@ MachineCat/
 - **状态管理**: Zustand
 - **HTTP 客户端**: Axios
 - **构建工具**: Create React App
+- **钱包集成**: Phantom Wallet
 
-### 硬件 (ESP32)
-- **开发环境**: Arduino IDE
-- **主控芯片**: ESP32
-- **通信协议**: WebSocket / HTTP / Bluetooth
+### 智能合约 (robot-contract)
+- **语言**: Rust
+- **框架**: Anchor
+- **网络**: Solana Devnet
+- **合约地址**: `ARjXV5jAyB1t53WE4c3eEf6gftFnF7aiympwBCfSvVoY`
+
+### 区块链协议集成
+- **LI.FI**: 跨链桥接协议，支持多链资产转移
+- **MagicBlock PER**: 隐私交易协议，保护用户交易隐私
+- **x402**: 自主代理支付协议，AI 代理自主执行支付
 
 ## 🚀 快速开始
 
@@ -115,6 +146,9 @@ MachineCat/
 - Node.js >= 18.x
 - MongoDB >= 6.0
 - Redis >= 7.0
+- Solana CLI >= 1.18.0（可选，用于合约开发）
+- Anchor >= 0.30.0（可选，用于合约开发）
+- Phantom 钱包（可选，用于前端交互）
 
 ### 后端启动
 
@@ -132,9 +166,7 @@ cp .env.example .env
 # 初始化示例数据（可选）
 npm run seed
 
-# 启动服务
-npm start
-# 或使用 HTTP 模式
+# 启动服务 使用 HTTP 模式
 npm run start:http
 ```
 
@@ -182,12 +214,55 @@ node virtual_robot.js
 ### 健康检查
 - `GET /health` - 服务健康检查
 
+### Solana 区块链
+- `GET /api/solana/state/:robotId` - 获取链上机器猫状态
+- `POST /api/solana/state/init` - 初始化链上机器猫状态
+- `POST /api/solana/state/update` - 更新链上机器猫状态
+- `POST /api/solana/quest/complete` - 完成链上任务
+- `POST /api/solana/transaction/build` - 构建前端签名交易
+- `POST /api/solana/transaction/init` - 构建初始化交易
+
+### 跨链支付
+- `POST /api/payment/process` - 处理跨链支付
+- `POST /api/payment/quote` - 获取跨链报价
+- `GET /api/payment/mode` - 获取当前支付模式
+
+## 🔗 跨链支付集成
+
+### LI.FI 跨链桥
+使用 LI.FI REST API 获取跨链报价和执行转账：
+- 支持多链资产转移（Ethereum, Polygon, BSC → Solana）
+- 自动路由最优跨链路径
+- API 文档：https://li.fi/developers
+
+### MagicBlock PER 隐私交易
+使用 MagicBlock PER 协议实现隐私保护交易：
+- 增强隐私保护级别
+- 大匿名集保护用户隐私
+- 适用于敏感支付场景
+
+### x402 自主代理支付
+使用 x402 协议实现 AI 代理自主支付：
+- AI 代理可自主发起和执行支付
+- 基于 Solana 链上状态触发
+- 适用于自动化服务付费场景
+
+## 🎯 用户流程（黑客松演示）
+
+1. **用户输入需求**：例如"我不想出门"
+2. **LLM 生成任务**：AI 建议"去楼下买瓶水"
+3. **用户确认任务**：确认支付和执行
+4. **连接 Phantom 钱包**：前端签名模式
+5. **LI.FI 跨链支付**：从其他链转移资产到 Solana
+6. **MagicBlock 隐私保护**：保护交易隐私
+7. **x402 自主代理支付**：完成支付流程
+8. **Solana 链上状态更新**：更新机器猫 mood, bond, energy 等
+9. **前端展示结果**：显示支付成功和状态变化
+
 ## 🎭 个性系统
 
 ### 机器猫类型
 - `CAT` - 猫型机器猫
-- `DOG` - 狗型机器猫
-- `SNAKE` - 蛇型机器猫
 - `CUSTOM` - 自定义类型
 
 ### 性格特征
@@ -232,6 +307,9 @@ node virtual_robot.js
 
 - [技术实现蓝图](complete_project_analysis_v4.md) - 完整的架构设计和技术选型
 - [开发计划](development_plan.md) - 详细的开发阶段和任务清单
+- [合约文档](robot-contract/README.md) - Solana 合约部署地址和 API 文档
+- [黑客松符合性分析](HACKATHON_COMPLIANCE.md) - 参赛要求符合性分析
+- [合约 API 文档](robot-contract/CONTRACT_API.md) - 合约接口详细说明
 
 ## 🔐 安全注意事项
 

@@ -27,15 +27,15 @@ ${traitsDescription}
 任务格式：
 - description: 任务描述（例如："去楼下买瓶水"）
 - cost: 花费金额（USDC，0.5-5之间）
-- fromChain: 源链（Ethereum）
-- toChain: 目标链（Solana）
+- fromChain: 源链（ETH）
+- toChain: 目标链（SOL）
 
 请根据以上性格设定，以第一人称回复用户的输入。
 
 用户输入：${userInput}
 
 你必须严格按照以下 JSON 格式回复，不要包含任何其他内容：
-{"text": "你的回复内容", "actions": [{"action": "动作名称", "params": {}}], "quest": {"description": "任务描述", "cost": 1.5, "fromChain": "Ethereum", "toChain": "Solana"}}
+{"text": "你的回复内容", "actions": [{"action": "动作名称", "params": {}}], "quest": {"description": "任务描述", "cost": 1.5, "fromChain": "ETH", "toChain": "SOL"}}
 
 要求：
 1. text 字段：符合你的性格特征，生动有趣
@@ -62,7 +62,7 @@ ${traitsDescription}
 
 示例 1（需要任务）：
 用户说：我不想出门
-回复：{"text": "喵~ 不想出门也没关系，那我们去楼下买瓶水好不好？", "actions": [{"action": "sit", "params": {}}], "quest": {"description": "去楼下买瓶水", "cost": 1.5, "fromChain": "Ethereum", "toChain": "Solana"}}
+回复：{"text": "喵~ 不想出门也没关系，那我们去楼下买瓶水好不好？", "actions": [{"action": "sit", "params": {}}], "quest": {"description": "去楼下买瓶水", "cost": 1.5, "fromChain": "ETH", "toChain": "SOL"}}
 
 示例 2（不需要任务）：
 用户说：前进

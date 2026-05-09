@@ -6,7 +6,7 @@ const router = new Router({ prefix: '/api/payment' });
 
 router.post('/quote', koaBody(), async (ctx) => {
   try {
-    const { fromChain, toChain, amount, fromToken, toToken } = ctx.request.body;
+    const { fromChain, toChain, amount, fromToken, toToken, userAddress } = ctx.request.body;
     
     if (!fromChain || !toChain || !amount) {
       ctx.status = 400;
@@ -14,7 +14,7 @@ router.post('/quote', koaBody(), async (ctx) => {
       return;
     }
 
-    const result = await paymentService.getQuote(fromChain, toChain, amount, fromToken, toToken);
+    const result = await paymentService.getQuote(fromChain, toChain, amount, fromToken, toToken, userAddress);
     
     ctx.status = 200;
     ctx.body = result;
