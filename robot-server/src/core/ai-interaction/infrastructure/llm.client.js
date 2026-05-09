@@ -3,7 +3,6 @@ const axios = require('axios');
 class LLMClient {
   constructor() {
     this.apiUrl = process.env.LLM_API_URL || 'http://localhost:11434/api/generate';
-    // this.model = process.env.LLM_MODEL || 'gemma4:e2b';
     this.model = process.env.LLM_MODEL || 'gemma4:latest';
     this.useMock = process.env.USE_LLM_MOCK === 'true';
   }
