@@ -81,7 +81,7 @@ function PersonalityPage() {
       setCurrentRobotId(robotId);
       setPersonality(response.data);
       setMessage('个性设置保存成功！');
-      setTimeout(() => navigate('/chat'), 1500);
+      setTimeout(() => navigate('/demo'), 1500);
     } catch (error) {
       setMessage('保存失败：' + (error.response?.data?.error || error.message));
     } finally {
