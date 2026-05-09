@@ -21,12 +21,12 @@ function Home() {
         </div>
 
         <div style={styles.card}>
-          <h3 style={styles.cardTitle}>2. 开始聊天</h3>
+          <h3 style={styles.cardTitle}>2. 跨链支付演示</h3>
           <p style={styles.cardDesc}>
-            与你的机器猫进行对话，它会根据个性给出独特的回复和动作。
+            体验 AI 任务生成、跨链支付和链上状态更新的完整流程。
           </p>
-          <Link to="/chat" style={styles.button}>
-            进入聊天
+          <Link to="/demo" style={styles.button}>
+            进入演示
           </Link>
         </div>
       </div>

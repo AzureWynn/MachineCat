@@ -203,7 +203,7 @@ function ChatPage() {
       const response = await interactionAPI.chat(currentRobotId, input);
       const botMessage = {
         role: 'bot',
-        content: response.data.responseText,
+        content: response.ngrok config add-authtoken data.responseText,
         actions: response.data.actions,
         timestamp: new Date(),
       };
