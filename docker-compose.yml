@@ -49,8 +49,8 @@ services:
       - MAGIC_BLOCK_API_KEY=${MAGIC_BLOCK_API_KEY:-}
       - X402_API_KEY=${X402_API_KEY:-}
       - PAYMENT_RECEIVER_ADDRESS=${PAYMENT_RECEIVER_ADDRESS:-}
-      - LLM_API_URL=${LLM_API_URL:-http://localhost:11434/api/generate}
-      - LLM_MODEL=${LLM_MODEL:-gemma4:latest}
+      - LLM_API_URL=${LLM_API_URL:-http://host.docker.internal:11434/api/generate}
+      - LLM_MODEL=${LLM_MODEL:-qwen2.5:0.5b}
       - USE_LLM_MOCK=${USE_LLM_MOCK:-false}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.openai.com/v1}
