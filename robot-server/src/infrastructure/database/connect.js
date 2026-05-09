@@ -6,9 +6,11 @@ async function connectDB() {
   try {
     await mongoose.connect(mongoUri);
     console.log('🍃 MongoDB connected successfully');
+    return true;
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error.message);
-    process.exit(1);
+    console.error('⚠️ MongoDB connection error:', error.message);
+    console.log('📦 使用 Mock 模式运行（无数据库）');
+    return false;
   }
 }
 

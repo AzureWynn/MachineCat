@@ -1,0 +1,225 @@
+{
+  "address": "ARjXV5jAyB1t53WE4c3eEf6gftFnF7aiympwBCfSvVoY",
+  "metadata": {
+    "name": "robot_contract",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Robot State Contract - Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "complete_quest",
+      "discriminator": [
+        96,
+        34,
+        101,
+        232,
+        164,
+        246,
+        150,
+        61
+      ],
+      "accounts": [
+        {
+          "name": "state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "state.robot_id",
+                "account": "RobotState"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "state"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize",
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "robot_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "robot_id",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "update_state",
+      "discriminator": [
+        135,
+        112,
+        215,
+        75,
+        247,
+        185,
+        53,
+        176
+      ],
+      "accounts": [
+        {
+          "name": "state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "state.robot_id",
+                "account": "RobotState"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "state"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "mood_delta",
+          "type": "i32"
+        },
+        {
+          "name": "bond_delta",
+          "type": "i32"
+        },
+        {
+          "name": "energy_delta",
+          "type": "i32"
+        },
+        {
+          "name": "streak_delta",
+          "type": "u32"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "RobotState",
+      "discriminator": [
+        202,
+        64,
+        82,
+        145,
+        63,
+        179,
+        107,
+        244
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "RobotState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "robot_id",
+            "type": "string"
+          },
+          {
+            "name": "mood",
+            "type": "u8"
+          },
+          {
+            "name": "bond",
+            "type": "u8"
+          },
+          {
+            "name": "energy",
+            "type": "u8"
+          },
+          {
+            "name": "streak",
+            "type": "u32"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "last_updated",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
+}

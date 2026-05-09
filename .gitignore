@@ -56,3 +56,6 @@ node_modules/
 # Build output
 build/
 dist/
+
+# Solana test ledger
+test-ledger/

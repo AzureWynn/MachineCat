@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Koa = require('koa');
 const http = require('http');
 const https = require('https');
@@ -11,6 +12,10 @@ const personalityRouter = require('./routes/personality.routes');
 const { router: interactionRouter, setInteractionService, setRobotConnector } = require('./routes/interaction.routes');
 const staticDataRouter = require('./routes/static-data.routes');
 const speechRouter = require('./routes/speech.routes');
+const solanaRouter = require('./routes/solana.routes');
+const solanaService = require('../../core/blockchain/solana.service');
+const paymentRouter = require('./routes/payment.routes');
+const paymentService = require('../../core/blockchain/payment.service');
 
 const app = new Koa();
 
@@ -29,6 +34,8 @@ app.use(healthRouter.routes()).use(healthRouter.allowedMethods());
 app.use(personalityRouter.routes()).use(personalityRouter.allowedMethods());
 app.use(staticDataRouter.routes()).use(staticDataRouter.allowedMethods());
 app.use(speechRouter.routes()).use(speechRouter.allowedMethods());
+app.use(solanaRouter.routes()).use(solanaRouter.allowedMethods());
+app.use(paymentRouter.routes()).use(paymentRouter.allowedMethods());
 
 const PORT = process.env.PORT || 3000;
 const HTTPS_PORT = process.env.HTTPS_PORT || 3002;
@@ -58,7 +65,9 @@ setRobotConnector(robotConnector);
 
 app.use(interactionRouter.routes()).use(interactionRouter.allowedMethods());
 
-connectDB().then(() => {
+connectDB().then(async () => {
+  await solanaService.initialize();
+  await paymentService.initialize();
   server.listen(HTTPS_PORT, () => {
     console.log(`🚀 Server listening on https://localhost:${HTTPS_PORT}`);
     console.log(`🤖 机器人 IP: ${ROBOT_IP}`);
@@ -66,8 +75,10 @@ connectDB().then(() => {
   });
 }).catch((error) => {
   console.error('数据库连接失败:', error);
-  server.listen(HTTPS_PORT, () => {
-    console.log(`🚀 Server listening on https://localhost:${HTTPS_PORT} (无数据库)`);
-    console.log(`🤖 机器人 IP: ${ROBOT_IP}`);
+  Promise.all([solanaService.initialize(), paymentService.initialize()]).then(() => {
+    server.listen(HTTPS_PORT, () => {
+      console.log(`🚀 Server listening on https://localhost:${HTTPS_PORT} (无数据库)`);
+      console.log(`🤖 机器人 IP: ${ROBOT_IP}`);
+    });
   });
 });

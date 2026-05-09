@@ -4,6 +4,7 @@ class ResponseParser {
       return {
         text: llmResponse.text,
         actions: llmResponse.actions,
+        quest: llmResponse.quest || null,
       };
     }
 
@@ -16,6 +17,7 @@ class ResponseParser {
             return {
               text: parsed.text,
               actions: Array.isArray(parsed.actions) ? parsed.actions : [],
+              quest: parsed.quest || null,
             };
           }
         } catch (error) {
@@ -36,18 +38,20 @@ class ResponseParser {
         } catch (error) {
           console.error('Error parsing actions JSON:', error.message);
         }
-        return { text, actions };
+        return { text, actions, quest: null };
       }
 
       return {
         text: llmResponse.trim(),
         actions: [],
+        quest: null,
       };
     }
 
     return {
       text: String(llmResponse),
       actions: [],
+      quest: null,
     };
   }
 

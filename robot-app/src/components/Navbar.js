@@ -45,6 +45,15 @@ function Navbar() {
         >
           控制调试
         </Link>
+        <Link
+          to="/demo"
+          style={{
+            ...styles.link,
+            ...(isActive('/demo') ? styles.activeLink : {}),
+          }}
+        >
+          演示
+        </Link>
         {/* <Link
           to="/voice-test"
           style={{

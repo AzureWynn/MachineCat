@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import PersonalityPage from './pages/PersonalityPage';
 import ChatPage from './pages/ChatPage';
 import ControlPage from './pages/ControlPage';
+import DemoPage from './pages/DemoPage';
 // import VoiceTestPage from './pages/VoiceTestPage';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path="/personality" element={<PersonalityPage />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/control" element={<ControlPage />} />
+            <Route path="/demo" element={<DemoPage />} />
             {/* <Route path="/voice-test" element={<VoiceTestPage />} /> */}
           </Routes>
         </main>
