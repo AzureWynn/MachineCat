@@ -3,7 +3,7 @@ import { useStore } from '../store/store';
 import { Connection, Transaction } from '@solana/web3.js';
 import { Buffer } from 'buffer';
 
-const API_BASE = 'https://localhost:3002/api';
+const API_BASE = '/api';
 const SOLANA_RPC_URL = 'https://devnet.helius-rpc.com/?api-key=d4f1dbe4-60c7-4b9d-bada-17cfac55e1c1';
 
 function DemoPage() {
