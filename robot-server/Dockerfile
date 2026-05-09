@@ -8,6 +8,8 @@ RUN npm install --production
 
 COPY . .
 
+RUN chmod +x docker-entrypoint.sh
+
 EXPOSE 3002
 
-CMD ["node", "src/infrastructure/web/server.http.js"]
+CMD ["./docker-entrypoint.sh"]
