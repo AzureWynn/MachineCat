@@ -28,6 +28,20 @@ services:
     networks:
       - robot-network
 
+  # Ollama LLM 服务
+  ollama:
+    image: ollama/ollama:latest
+    container_name: robot-ollama
+    restart: always
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    networks:
+      - robot-network
+
   # 后端服务
   robot-server:
     build:
@@ -58,6 +72,7 @@ services:
     depends_on:
       - mongodb
       - redis
+      - ollama
     networks:
       - robot-network
 

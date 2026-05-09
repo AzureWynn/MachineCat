@@ -50,28 +50,36 @@ echo " 拉取最新代码..."
 git pull
 
 # 停止并删除旧容器（避免 v1/v2 兼容性问题）
-echo "🧹 清理旧容器..."
+echo " 清理旧容器..."
 $COMPOSE_CMD down -v
 
+# 停止旧的独立 ollama 容器（如果存在）
+echo " 停止旧的 ollama 容器..."
+docker stop ollama 2>/dev/null && docker rm ollama 2>/dev/null || true
+
 # 构建并启动服务
-echo "🔨 构建 Docker 镜像..."
+echo " 构建 Docker 镜像..."
 $COMPOSE_CMD build
 
-echo "🚀 启动服务..."
+echo " 启动服务..."
 $COMPOSE_CMD up -d
 
 # 等待服务启动
-echo "⏳ 等待服务启动..."
-sleep 10
+echo " 等待服务启动..."
+sleep 15
+
+# 拉取 Ollama 模型
+echo " 拉取 Ollama 模型 (qwen2.5:0.5b)..."
+docker exec robot-ollama ollama pull qwen2.5:0.5b
 
 # 检查服务状态
 echo " 服务状态："
 $COMPOSE_CMD ps
 
 echo ""
-echo "✅ 部署完成！"
-echo "🌐 前端访问地址: http://你的服务器IP"
-echo "🔌 后端 API 地址: http://你的服务器IP:3002"
+echo " 部署完成！"
+echo " 前端访问地址: http://你的服务器IP"
+echo " 后端 API 地址: http://你的服务器IP:3002"
 echo ""
 echo " 常用命令："
 echo "  查看日志: $COMPOSE_CMD logs -f"
