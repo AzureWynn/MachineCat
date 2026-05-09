@@ -20,7 +20,7 @@
 - 📄 [黑客松符合性分析](HACKATHON_ANALYSIS.md) - 参赛要求符合性详细分析
 
 ### 在线演示
-> 🚧 前端部署中...
+🌐 **https://bureau-readings-media-changelog.trycloudflare.com**
 
 ### 演示视频
 > 🚧 视频制作中...
