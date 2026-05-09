@@ -9,10 +9,32 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-if ! command -v docker-compose &> /dev/null; then
+# 检查 docker-compose 版本，自动处理兼容性问题
+COMPOSE_CMD=""
+if command -v docker-compose &> /dev/null; then
+    COMPOSE_VERSION=$(docker-compose --version | grep -oP '\d+' | head -1)
+    if [ "$COMPOSE_VERSION" -ge 2 ]; then
+        COMPOSE_CMD="docker-compose"
+    else
+        echo "⚠️  检测到旧版 docker-compose v1.x，尝试使用 docker compose v2..."
+        if docker compose version &> /dev/null; then
+            COMPOSE_CMD="docker compose"
+            echo "✅ 使用 docker compose v2"
+        else
+            echo "❌ docker-compose 版本过旧 (v1.x) 且无 v2，请升级："
+            echo "   sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose"
+            echo "   sudo chmod +x /usr/local/bin/docker-compose"
+            exit 1
+        fi
+    fi
+elif docker compose version &> /dev/null; then
+    COMPOSE_CMD="docker compose"
+else
     echo "❌ Docker Compose 未安装，请先安装 Docker Compose"
     exit 1
 fi
+
+echo " 使用命令: $COMPOSE_CMD"
 
 # 检查 .env 文件是否存在
 if [ ! -f .env ]; then
@@ -24,31 +46,35 @@ if [ ! -f .env ]; then
 fi
 
 # 拉取最新代码
-echo "📥 拉取最新代码..."
+echo " 拉取最新代码..."
 git pull
+
+# 停止并删除旧容器（避免 v1/v2 兼容性问题）
+echo "🧹 清理旧容器..."
+$COMPOSE_CMD down -v
 
 # 构建并启动服务
 echo "🔨 构建 Docker 镜像..."
-docker-compose build
+$COMPOSE_CMD build
 
 echo "🚀 启动服务..."
-docker-compose up -d
+$COMPOSE_CMD up -d
 
 # 等待服务启动
 echo "⏳ 等待服务启动..."
 sleep 10
 
 # 检查服务状态
-echo "📊 服务状态："
-docker-compose ps
+echo " 服务状态："
+$COMPOSE_CMD ps
 
 echo ""
 echo "✅ 部署完成！"
 echo "🌐 前端访问地址: http://你的服务器IP"
 echo "🔌 后端 API 地址: http://你的服务器IP:3002"
 echo ""
-echo "📝 常用命令："
-echo "  查看日志: docker-compose logs -f"
-echo "  停止服务: docker-compose down"
-echo "  重启服务: docker-compose restart"
-echo "  更新代码: git pull && docker-compose up -d --build"
+echo " 常用命令："
+echo "  查看日志: $COMPOSE_CMD logs -f"
+echo "  停止服务: $COMPOSE_CMD down"
+echo "  重启服务: $COMPOSE_CMD restart"
+echo "  更新代码: git pull && bash deploy.sh"
