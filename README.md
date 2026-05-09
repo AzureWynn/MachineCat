@@ -4,6 +4,27 @@
 > 
 > **黑客松特别版**：集成 Solana 链上状态管理 + LI.FI 跨链桥 + MagicBlock 隐私交易 + x402 自主代理支付
 
+## 🏆 黑客松提交信息
+
+### 合约部署地址
+- **网络：** Solana Devnet
+- **Program ID：** `ARjXV5jAyB1t53WE4c3eEf6gftFnF7aiympwBCfSvVoY`
+- **交易签名：** [查看交易](https://solscan.io/tx/4FGj6HfGyZzX9kAqUdvHBdFycYAKAt9QKQh1F6WXfU9zji8a7wcj9iBqsXvBhfE3JmWjwwe4DXXx7LXdvDHXffwf?cluster=devnet)
+
+### 快速链接
+- 📄 [合约文档](robot-contract/README.md) - Solana 合约功能、部署和 API 说明
+- 📄 [合约 API 文档](robot-contract/CONTRACT_API.md) - 详细接口文档
+- 📄 [后端服务](robot-server/) - Node.js 后端代码
+- 📄 [前端应用](robot-app/) - React 前端代码
+- 📄 [Devnet 部署指南](DEPLOY_DEVNET.md) - 部署步骤和配置
+- 📄 [黑客松符合性分析](HACKATHON_ANALYSIS.md) - 参赛要求符合性详细分析
+
+### 在线演示
+> 🚧 前端部署中...
+
+### 演示视频
+> 🚧 视频制作中...
+
 ## 📖 项目简介
 
 机器猫是一个高度个性化、可扩展的智能机器猫交互平台。通过软件定义，我们为机器猫赋予名字、种类、品种和可定制的性格特征，并结合大型语言模型（LLM）实现真正的情感化智能交互。
@@ -229,35 +250,81 @@ node virtual_robot.js
 
 ## 🔗 跨链支付集成
 
-### LI.FI 跨链桥
-使用 LI.FI REST API 获取跨链报价和执行转账：
-- 支持多链资产转移（Ethereum, Polygon, BSC → Solana）
-- 自动路由最优跨链路径
-- API 文档：https://li.fi/developers
+### LI.FI 跨链桥（核心集成）
+
+**集成方式：** REST API
+
+**技术实现：**
+- 使用 LI.FI `/v1/quote` 获取跨链报价，支持多链资产转移（Ethereum, Polygon, BSC → Solana）
+- 使用 `/v1/transfer` 执行跨链转账，自动路由最优路径
+- 支持 API Key 认证（`x-lifi-api-key` header）
+- 完整的错误处理和 Mock 降级机制
+
+**调用流程：**
+```
+用户确认任务 
+  → 后端调用 LI.FI API 获取报价 
+  → 前端签名交易 
+  → LI.FI 执行跨链桥接 
+  → Solana 链上状态更新
+```
+
+**代码位置：** [robot-server/src/core/blockchain/payment.service.js](robot-server/src/core/blockchain/payment.service.js)
+
+**API 文档：** https://li.fi/developers
 
 ### MagicBlock PER 隐私交易
+
 使用 MagicBlock PER 协议实现隐私保护交易：
 - 增强隐私保护级别
-- 大匿名集保护用户隐私
+- 大匿名集保护用户隐私（1000+）
 - 适用于敏感支付场景
 
+**代码位置：** [payment.service.js](robot-server/src/core/blockchain/payment.service.js) - `createPrivateTransaction()`
+
 ### x402 自主代理支付
+
 使用 x402 协议实现 AI 代理自主支付：
 - AI 代理可自主发起和执行支付
 - 基于 Solana 链上状态触发
 - 适用于自动化服务付费场景
 
+**代码位置：** [payment.service.js](robot-server/src/core/blockchain/payment.service.js) - `createX402Payment()`
+
+### 支付模式
+
+系统支持双模式运行：
+- **Mock 模式**（默认）：本地测试，无需 API Key，快速开发
+- **Real 模式**：真实协议调用，需要配置 API Keys
+
+切换模式：
+```bash
+# 切换到 Real 模式
+./switch-network.sh devnet
+
+# 配置 .env
+PAYMENT_MODE=real
+LIFI_API_KEY=your_key_here
+```
+
 ## 🎯 用户流程（黑客松演示）
+
+**完整闭环：** AI 任务生成 → 用户确认 → 跨链支付 → 链上状态更新
 
 1. **用户输入需求**：例如"我不想出门"
 2. **LLM 生成任务**：AI 建议"去楼下买瓶水"
 3. **用户确认任务**：确认支付和执行
 4. **连接 Phantom 钱包**：前端签名模式
-5. **LI.FI 跨链支付**：从其他链转移资产到 Solana
+5. **LI.FI 跨链支付**：从其他链转移资产到 Solana（真实 API 调用）
 6. **MagicBlock 隐私保护**：保护交易隐私
 7. **x402 自主代理支付**：完成支付流程
 8. **Solana 链上状态更新**：更新机器猫 mood, bond, energy 等
 9. **前端展示结果**：显示支付成功和状态变化
+
+**Solana 在用户旅程中的核心作用：**
+- 机器人状态存储在 Solana 链上（PDA 账户）
+- 所有支付通过 Solana 完成
+- 合约是 AI 代理和用户交互的核心基础设施
 
 ## 🎭 个性系统
 
@@ -308,8 +375,14 @@ node virtual_robot.js
 - [技术实现蓝图](complete_project_analysis_v4.md) - 完整的架构设计和技术选型
 - [开发计划](development_plan.md) - 详细的开发阶段和任务清单
 - [合约文档](robot-contract/README.md) - Solana 合约部署地址和 API 文档
-- [黑客松符合性分析](HACKATHON_COMPLIANCE.md) - 参赛要求符合性分析
 - [合约 API 文档](robot-contract/CONTRACT_API.md) - 合约接口详细说明
+- [Devnet 部署指南](DEPLOY_DEVNET.md) - Devnet 部署步骤和配置
+- [黑客松符合性分析](HACKATHON_ANALYSIS.md) - 参赛要求符合性详细分析
+
+### 子项目文档
+- [robot-contract/README.md](robot-contract/README.md) - Solana 智能合约文档
+- [robot-server/](robot-server/) - 后端服务（无独立 README）
+- [robot-app/](robot-app/) - 前端应用（无独立 README）
 
 ## 🔐 安全注意事项
 

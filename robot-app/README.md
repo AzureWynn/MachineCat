@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+# 🤖 buzhai - 前端应用
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+机器猫跨链隐私支付平台的前端 React 应用。
 
-## Available Scripts
+## 快速链接
 
-In the project directory, you can run:
+- 📄 [主项目 README](../README.md) - 项目总览和黑客松信息
+- 📄 [合约文档](../robot-contract/README.md) - Solana 合约文档
+- 📄 [后端服务](../robot-server/) - Node.js 后端代码
+- 📄 [黑客松符合性分析](../HACKATHON_ANALYSIS.md) - 参赛要求分析
 
-### `npm start`
+## 技术栈
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **UI 框架**: React 19
+- **路由**: React Router v7
+- **状态管理**: Zustand
+- **HTTP 客户端**: Axios
+- **构建工具**: Create React App
+- **钱包集成**: Phantom Wallet
+- **区块链**: @solana/web3.js
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 核心功能
 
-### `npm test`
+- 机器猫状态展示（mood, bond, energy, streak）
+- AI 对话界面
+- Phantom 钱包连接（支持桌面和移动端）
+- 跨链支付流程（LI.FI + MagicBlock + x402）
+- 前端交易签名模式
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 快速开始
 
-### `npm run build`
+```bash
+# 安装依赖
+npm install
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# 启动开发服务器
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+应用将在 http://localhost:3000 启动。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 部署
 
-### `npm run eject`
+```bash
+# 构建生产版本
+npm run build
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# 部署到 Vercel
+vercel --prod
+```
