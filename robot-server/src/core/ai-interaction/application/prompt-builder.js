@@ -82,6 +82,21 @@ ${traitsDescription}
       .map(([trait, value]) => `- ${trait}: ${value}%`)
       .join('\n');
   }
+
+  buildQuestPrompt(userInput) {
+    return `你是一个机器猫助手。用户表达了消极情绪，请生成一个简单的任务建议。
+
+用户输入：${userInput}
+
+请只返回 JSON 格式，不要有其他内容：
+{"description": "任务描述", "cost": 2, "fromChain": "ETH", "toChain": "SOL"}
+
+要求：
+- description: 简短的任务描述（10-20字）
+- cost: 0.5-5 之间的数字
+- fromChain: ETH
+- toChain: SOL`;
+  }
 }
 
 module.exports = PromptBuilder;

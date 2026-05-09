@@ -64,13 +64,62 @@ class InteractionService {
 
     console.log(`[Chat] ===== 聊天请求处理完成 =====\n`);
 
-    return {
+    let result = {
       robotId,
       userInput,
       responseText: parsedResponse.text,
       actions: validActions,
       quest: parsedResponse.quest,
     };
+
+    if (!result.quest && this.shouldGenerateQuest(userInput)) {
+      console.log(`[Chat] ⚠️ LLM 未生成任务，尝试单独调用 LLM 生成任务...`);
+      const questPrompt = this.promptBuilder.buildQuestPrompt(userInput);
+      const questResponse = await this.llmClient.generateResponse(questPrompt);
+      const parsedQuest = this.responseParser.parseQuest(questResponse);
+      
+      if (parsedQuest) {
+        console.log(`[Chat] ✅ 成功生成任务: ${parsedQuest.description}`);
+        result.quest = parsedQuest;
+      } else {
+        console.log(`[Chat] ⚠️ 任务生成失败，使用 Mock 任务`);
+        result.quest = this.generateMockQuest(userInput);
+      }
+    }
+
+    return result;
+  }
+
+  shouldGenerateQuest(userInput) {
+    const negativePatterns = /不想|无聊|没意思|烦|郁闷|难过|焦虑|生气|累|懒|困/;
+    return negativePatterns.test(userInput);
+  }
+
+  generateMockQuest(userInput) {
+    const quests = [
+      {
+        id: 'mock-quest-' + Date.now(),
+        description: '去附近的公园散步',
+        cost: 2,
+        fromChain: 'ETH',
+        toChain: 'SOL',
+      },
+      {
+        id: 'mock-quest-' + Date.now(),
+        description: '去楼下买瓶水',
+        cost: 1.5,
+        fromChain: 'ETH',
+        toChain: 'SOL',
+      },
+      {
+        id: 'mock-quest-' + Date.now(),
+        description: '去便利店买点零食',
+        cost: 3,
+        fromChain: 'ETH',
+        toChain: 'SOL',
+      },
+    ];
+    return quests[Math.floor(Math.random() * quests.length)];
   }
 }
 

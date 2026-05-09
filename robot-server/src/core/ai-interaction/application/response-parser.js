@@ -80,6 +80,40 @@ class ResponseParser {
   filterValidActions(actions) {
     return actions.filter(action => this.validateAction(action));
   }
+
+  parseQuest(llmResponse) {
+    if (typeof llmResponse === 'object' && llmResponse.description) {
+      return {
+        id: 'quest-' + Date.now(),
+        description: llmResponse.description,
+        cost: llmResponse.cost || 2,
+        fromChain: llmResponse.fromChain || 'ETH',
+        toChain: llmResponse.toChain || 'SOL',
+      };
+    }
+
+    if (typeof llmResponse === 'string') {
+      const jsonMatch = llmResponse.match(/\{[\s\S]*"description"[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          const parsed = JSON.parse(jsonMatch[0]);
+          if (parsed.description) {
+            return {
+              id: 'quest-' + Date.now(),
+              description: parsed.description,
+              cost: parsed.cost || 2,
+              fromChain: parsed.fromChain || 'ETH',
+              toChain: parsed.toChain || 'SOL',
+            };
+          }
+        } catch (error) {
+          console.error('Error parsing quest JSON:', error.message);
+        }
+      }
+    }
+
+    return null;
+  }
 }
 
 module.exports = ResponseParser;
