@@ -37,17 +37,10 @@ app.use(speechRouter.routes()).use(speechRouter.allowedMethods());
 app.use(solanaRouter.routes()).use(solanaRouter.allowedMethods());
 app.use(paymentRouter.routes()).use(paymentRouter.allowedMethods());
 
-const PORT = process.env.PORT || 3000;
-const HTTPS_PORT = process.env.HTTPS_PORT || 3002;
+const PORT = process.env.PORT || 3002;
 const ROBOT_IP = process.env.ROBOT_IP || '192.168.4.1';
 
-const certPath = path.join(__dirname, '../../..', 'certificates');
-const httpsOptions = {
-  key: fs.readFileSync(path.join(certPath, 'localhost-key.pem')),
-  cert: fs.readFileSync(path.join(certPath, 'localhost.pem')),
-};
-
-const server = https.createServer(httpsOptions, app.callback());
+const server = http.createServer(app.callback());
 
 const robotConnector = new RobotHTTPConnector(ROBOT_IP);
 
@@ -68,17 +61,17 @@ app.use(interactionRouter.routes()).use(interactionRouter.allowedMethods());
 connectDB().then(async () => {
   await solanaService.initialize();
   await paymentService.initialize();
-  server.listen(HTTPS_PORT, () => {
-    console.log(`🚀 Server listening on https://localhost:${HTTPS_PORT}`);
+  server.listen(PORT, () => {
+    console.log(`🚀 Server listening on http://localhost:${PORT}`);
     console.log(`🤖 机器人 IP: ${ROBOT_IP}`);
     console.log(`📡 连接模式: HTTP (ESP32 Web 服务器)`);
   });
 }).catch((error) => {
   console.error('数据库连接失败:', error);
   Promise.all([solanaService.initialize(), paymentService.initialize()]).then(() => {
-    server.listen(HTTPS_PORT, () => {
-      console.log(`🚀 Server listening on https://localhost:${HTTPS_PORT} (无数据库)`);
-      console.log(`🤖 机器人 IP: ${ROBOT_IP}`);
+    server.listen(PORT, () => {
+      console.log(`🚀 Server listening on http://localhost:${PORT} (无数据库)`);
+      console.log(` 机器人 IP: ${ROBOT_IP}`);
     });
   });
 });
