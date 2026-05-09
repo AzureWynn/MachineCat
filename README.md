@@ -2,7 +2,7 @@
 
 > 赋予每个物理机器猫独一无二的"灵魂"——能听、会说、会动，且所有行为和语言都与其设定的"人设"高度统一。
 > 
-> **黑客松特别版**：集成 Solana 链上状态管理 + LI.FI 跨链桥 + MagicBlock 隐私交易 + x402 自主代理支付
+> 集成 Solana 链上状态管理 + LI.FI 跨链桥 + MagicBlock 隐私交易 + x402 自主代理支付
 
 ## 🏆 黑客松提交信息
 
@@ -17,13 +17,12 @@
 - 📄 [后端服务](robot-server/) - Node.js 后端代码
 - 📄 [前端应用](robot-app/) - React 前端代码
 - 📄 [Devnet 部署指南](DEPLOY_DEVNET.md) - 部署步骤和配置
-- 📄 [黑客松符合性分析](HACKATHON_ANALYSIS.md) - 参赛要求符合性详细分析
 
 ### 在线演示
 🌐 **https://bureau-readings-media-changelog.trycloudflare.com**
 
 ### 演示视频
-> 🚧 视频制作中...
+> 即将发布
 
 ## 📖 项目简介
 
@@ -115,7 +114,7 @@ MachineCat/
 │   ├── virtual_robot.js         # 虚拟机器猫模拟器
 │   └── package.json
 │
-├── robot-contract/               # Solana 智能合约（新增）
+── robot-contract/               # Solana 智能合约
 │   ├── programs/
 │   │   └── robot-contract/
 │   │       └── src/
@@ -126,7 +125,7 @@ MachineCat/
 │   └── README.md                 # 合约文档
 │
 ├── complete_project_analysis_v4.md  # 技术实现蓝图
-└── development_plan.md              # 开发计划
+── development_plan.md              # 开发计划
 ```
 
 ## 🛠️ 技术栈
@@ -381,8 +380,8 @@ LIFI_API_KEY=your_key_here
 
 ### 子项目文档
 - [robot-contract/README.md](robot-contract/README.md) - Solana 智能合约文档
-- [robot-server/](robot-server/) - 后端服务（无独立 README）
-- [robot-app/](robot-app/) - 前端应用（无独立 README）
+- [robot-server/](robot-server/) - 后端服务
+- [robot-app/](robot-app/) - 前端应用
 
 ## 🔐 安全注意事项
 

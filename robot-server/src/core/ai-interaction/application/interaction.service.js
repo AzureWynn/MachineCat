@@ -19,13 +19,39 @@ class InteractionService {
     const personality = await PersonalityService.getPersonalityByRobotId(robotId);
 
     if (!personality) {
-      console.error(`[Chat] ❌ 未找到机器猫 ${robotId} 的性格配置`);
-      throw new Error(`No personality found for robot: ${robotId}`);
+      console.log(`[Chat] ⚠️ 未找到机器猫 ${robotId} 的性格配置，使用默认个性`);
+      const defaultPersonality = {
+        robotId,
+        name: '小橘',
+        type: 'CAT',
+        traits: {
+          '活泼': 80,
+          '傲娇': 50,
+          '贪吃': 90,
+          '温柔': 70,
+          '好奇': 60,
+        },
+      };
+      await PersonalityService.createOrUpdatePersonality(robotId, defaultPersonality);
+      console.log(`[Chat] ✅ 已创建默认个性: ${defaultPersonality.name} (${defaultPersonality.type})`);
     }
 
-    console.log(`[Chat] ✅ 获取性格配置: ${personality.name} (${personality.type})`);
+    const finalPersonality = personality || {
+      robotId,
+      name: '小橘',
+      type: 'CAT',
+      traits: {
+        '活泼': 80,
+        '傲娇': 50,
+        '贪吃': 90,
+        '温柔': 70,
+        '好奇': 60,
+      },
+    };
 
-    const prompt = this.promptBuilder.buildPrompt(personality, userInput);
+    console.log(`[Chat] ✅ 使用性格配置: ${finalPersonality.name} (${finalPersonality.type})`);
+
+    const prompt = this.promptBuilder.buildPrompt(finalPersonality, userInput);
     console.log(`[Chat] 📝 构建 Prompt 完成 (长度: ${prompt.length} 字符)`);
 
     console.log(`[Chat] 🤖 调用 LLM...`);
