@@ -336,8 +336,17 @@ monitor() {
     
     local restart_count=0
     local last_restart_time=0
+    local check_count=0
     
     while true; do
+        check_count=$((check_count + 1))
+        
+        # 每 6 次检查（约 1 分钟）输出一次心跳日志
+        if [ $((check_count % 6)) -eq 0 ]; then
+            local current_url=$(get_current_url)
+            log_info "监控心跳正常 (已检查 ${check_count} 次) | 当前 URL: ${current_url:-无}"
+        fi
+        
         if ! is_running; then
             local current_time=$(date +%s)
             local time_since_last_restart=$((current_time - last_restart_time))

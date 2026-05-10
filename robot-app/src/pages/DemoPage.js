@@ -24,6 +24,50 @@ function DemoPage() {
   const [paymentMode, setPaymentMode] = useState(null);
   const [paymentModeInfo, setPaymentModeInfo] = useState(null);
 
+  const fetchPaymentMode = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/payment/mode`);
+      const result = await response.json();
+      if (result.success) {
+        setPaymentMode(result.data.mode);
+        setPaymentModeInfo(result.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch payment mode:', error);
+    }
+  };
+
+  const checkWalletConnection = async () => {
+    if (window.solana && window.solana.isPhantom) {
+      try {
+        const response = await window.solana.connect({ onlyIfTrusted: true });
+        setWalletConnected(true);
+        setWalletAddress(response.publicKey.toString());
+      } catch (err) {
+        // User not authorized
+      }
+    }
+  };
+
+  const fetchRobotState = async () => {
+    try {
+      const url = walletAddress 
+        ? `${API_BASE}/solana/state/${currentRobotId}?userAddress=${walletAddress}`
+        : `${API_BASE}/solana/state/${currentRobotId}`;
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const result = await response.json();
+      if (result.success) {
+        setRobotState(result.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch robot state:', error);
+    }
+  };
+
   useEffect(() => {
     const robotId = localStorage.getItem('currentRobotId');
     if (!robotId || robotId === '') {
@@ -50,31 +94,6 @@ function DemoPage() {
   if (!currentRobotId) {
     return null;
   }
-
-  const fetchPaymentMode = async () => {
-    try {
-      const response = await fetch(`${API_BASE}/payment/mode`);
-      const result = await response.json();
-      if (result.success) {
-        setPaymentMode(result.data.mode);
-        setPaymentModeInfo(result.data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch payment mode:', error);
-    }
-  };
-
-  const checkWalletConnection = async () => {
-    if (window.solana && window.solana.isPhantom) {
-      try {
-        const response = await window.solana.connect({ onlyIfTrusted: true });
-        setWalletConnected(true);
-        setWalletAddress(response.publicKey.toString());
-      } catch (err) {
-        // User not authorized
-      }
-    }
-  };
 
   const connectWallet = async () => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -107,25 +126,6 @@ function DemoPage() {
       await window.solana.disconnect();
       setWalletConnected(false);
       setWalletAddress('');
-    }
-  };
-
-  const fetchRobotState = async () => {
-    try {
-      const url = walletAddress 
-        ? `${API_BASE}/solana/state/${currentRobotId}?userAddress=${walletAddress}`
-        : `${API_BASE}/solana/state/${currentRobotId}`;
-      
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const result = await response.json();
-      if (result.success) {
-        setRobotState(result.data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch robot state:', error);
     }
   };
 
