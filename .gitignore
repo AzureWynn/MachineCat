@@ -59,3 +59,6 @@ dist/
 
 # Solana test ledger
 test-ledger/
+
+# Temporary directory
+temp/

@@ -26,12 +26,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y \
-    gazebo \
-    libgazebo-dev \
+    xfce4 \
+    xfce4-goodies \
     tigervnc-standalone-server \
     tigervnc-common \
     supervisor \
     python3-pip \
+    python3-colcon-common-extensions \
+    novnc \
+    websockify \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install setuptools
@@ -39,6 +42,9 @@ RUN pip3 install setuptools
 RUN mkdir -p /root/.vnc && \
     echo "robot" | vncpasswd -f > /root/.vnc/passwd && \
     chmod 600 /root/.vnc/passwd
+
+COPY xstartup /root/.vnc/xstartup
+RUN chmod +x /root/.vnc/xstartup
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 

@@ -4,7 +4,7 @@ services:
   ros2-gazebo:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.alternative
     container_name: machinecat-ros2-sim
     restart: unless-stopped
     ports:
@@ -17,7 +17,6 @@ services:
       - VNC_PASSWORD=robot
     volumes:
       - ./src:/ros2_ws/src
-      - gazebo_models:/root/.gazebo/models
     shm_size: "512m"
     networks:
       - ros2-network
