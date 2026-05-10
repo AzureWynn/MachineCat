@@ -25,8 +25,11 @@ function DemoPage() {
   const [paymentModeInfo, setPaymentModeInfo] = useState(null);
 
   useEffect(() => {
-    if (!currentRobotId) {
-      navigate('/personality');
+    const robotId = localStorage.getItem('currentRobotId');
+    if (!robotId || robotId === '') {
+      navigate('/personality', { replace: true });
+    } else if (robotId !== currentRobotId) {
+      useStore.getState().setCurrentRobotId(robotId);
     }
   }, [currentRobotId, navigate]);
 

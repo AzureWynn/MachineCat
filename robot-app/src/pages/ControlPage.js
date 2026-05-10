@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store';
 import { robotControlAPI } from '../services/api';
 
@@ -22,11 +23,19 @@ const COMMANDS = [
 ];
 
 function ControlPage() {
+  const navigate = useNavigate();
   const { currentRobotId, setCurrentRobotId, personality } = useStore();
   const [robotId, setRobotId] = useState(currentRobotId || 'test-robot');
   const [loading, setLoading] = useState(false);
   const [logs, setLogs] = useState([]);
   const [connectionStatus, setConnectionStatus] = useState('unknown');
+
+  useEffect(() => {
+    const storedRobotId = localStorage.getItem('currentRobotId');
+    if (!storedRobotId || storedRobotId === '') {
+      navigate('/personality', { replace: true });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     if (currentRobotId) {
