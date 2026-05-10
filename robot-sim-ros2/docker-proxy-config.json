@@ -1,0 +1,7 @@
+{
+  "proxies": {
+    "http-proxy": "http://127.0.0.1:10808",
+    "https-proxy": "http://127.0.0.1:10808",
+    "no-proxy": "*.local,127.0.0.0/8"
+  }
+}
