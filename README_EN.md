@@ -21,7 +21,7 @@
 - 📄 [Devnet Deployment Guide](DEPLOY_DEVNET.md) - Deployment steps and configuration
 
 ### Live Demo
-🌐 **https://timeline-transform-volumes-rated.trycloudflare.com**
+🌐 **https://list-daily-nottingham-inch.trycloudflare.com**
 
 ### Demo Video
 🎬 **https://youtu.be/EfRvZO4WACY**
