@@ -86,3 +86,41 @@ echo "  查看日志: $COMPOSE_CMD logs -f"
 echo "  停止服务: $COMPOSE_CMD down"
 echo "  重启服务: $COMPOSE_CMD restart"
 echo "  更新代码: git pull && bash deploy.sh"
+echo ""
+
+# Cloudflared 配置提示
+if command -v cloudflared &> /dev/null; then
+    echo "=========================================="
+    echo "☁️  Cloudflared Tunnel 配置"
+    echo "=========================================="
+    echo ""
+    echo "检测到 cloudflared 已安装，可以使用自动管理脚本："
+    echo ""
+    echo "  启动监控模式（推荐）:"
+    echo "    bash cloudflared-manager.sh monitor"
+    echo ""
+    echo "  其他命令:"
+    echo "    bash cloudflared-manager.sh start   # 启动 tunnel"
+    echo "    bash cloudflared-manager.sh stop    # 停止 tunnel"
+    echo "    bash cloudflared-manager.sh status  # 查看状态"
+    echo "    bash cloudflared-manager.sh logs    # 查看日志"
+    echo ""
+    echo "监控模式功能："
+    echo "  ✓ 自动重启断开的 tunnel"
+    echo "  ✓ 域名变更时自动同步到 Git"
+    echo "  ✓ 自动更新 .env 文件"
+    echo ""
+    
+    # 询问是否启动
+    read -p "是否现在启动 cloudflared 监控模式？(y/N) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo ""
+        echo "启动 cloudflared 监控模式..."
+        bash cloudflared-manager.sh monitor
+    fi
+else
+    echo "💡 提示：安装 cloudflared 可获得自动公网访问"
+    echo "   macOS: brew install cloudflared"
+    echo "   Linux: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/"
+fi
