@@ -21,7 +21,7 @@
 - 📄 [Devnet Deployment Guide](DEPLOY_DEVNET.md) - Deployment steps and configuration
 
 ### Live Demo
-🌐 **https://list-daily-nottingham-inch.trycloudflare.com**
+🌐 **https://fat-key-clarke-mel.trycloudflare.com**
 
 ### Demo Video
 🎬 **https://youtu.be/EfRvZO4WACY**

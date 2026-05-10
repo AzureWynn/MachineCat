@@ -21,7 +21,7 @@
 - 📄 [Devnet 部署指南](DEPLOY_DEVNET.md) - 部署步骤和配置
 
 ### 在线演示
-🌐 **https://list-daily-nottingham-inch.trycloudflare.com**
+🌐 **https://fat-key-clarke-mel.trycloudflare.com**
 
 ### 演示视频
 🎬 **https://youtu.be/EfRvZO4WACY**
