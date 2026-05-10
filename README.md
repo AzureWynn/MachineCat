@@ -103,7 +103,7 @@ MachineCat/
 │   │   │   ├── robot-control/        # 机器猫控制上下文
 │   │   │   │   ├── domain/           # 机器猫聚合根
 │   │   │   │   └── infrastructure/   # WebSocket/HTTP/蓝牙连接器
-│   │   │   └── blockchain/           # 区块链服务（新增）
+│   │   │   └── blockchain/           # 区块链服务
 │   │   │       ├── solana.service.js     # Solana 合约交互
 │   │   │       ├── payment.service.js    # 跨链支付服务
 │   │   │       └── robot_contract.json   # 合约 IDL
@@ -116,13 +116,23 @@ MachineCat/
 │
 ── robot-contract/               # Solana 智能合约
 │   ├── programs/
-│   │   └── robot-contract/
-│   │       └── src/
+│   │   ── robot-contract/
+│   │       ── src/
 │   │           └── lib.rs        # 合约主代码（Rust/Anchor）
 │   ├── tests/
 │   │   └── robot-contract.ts     # 合约测试
 │   ├── Anchor.toml               # Anchor 配置
 │   └── README.md                 # 合约文档
+│
+├── robot-sim-ros2/               # ROS2 + Gazebo 仿真
+│   ├── src/machinecat_robot/     # ROS2 机器人包
+│   │   ├── urdf/                 # URDF 机器人模型
+│   │   ├── launch/               # 启动文件
+│   │   ├── scripts/              # Python 控制脚本
+│   │   └── worlds/               # Gazebo 世界文件
+│   ├── Dockerfile                # Docker 镜像
+│   ├── docker-compose.yml        # 容器编排
+│   └── README.md                 # 仿真文档
 │
 ├── complete_project_analysis_v4.md  # 技术实现蓝图
 ── development_plan.md              # 开发计划
@@ -382,6 +392,7 @@ LIFI_API_KEY=your_key_here
 - [robot-contract/README.md](robot-contract/README.md) - Solana 智能合约文档
 - [robot-server/](robot-server/) - 后端服务
 - [robot-app/](robot-app/) - 前端应用
+- [robot-sim-ros2/README.md](robot-sim-ros2/README.md) - ROS2 + Gazebo 仿真文档
 
 ## 🔐 安全注意事项
 
