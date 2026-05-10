@@ -1,5 +1,7 @@
 # 🤖 buzhai - 跨链隐私支付智能机器猫平台
 
+[🇧 English Version](README_EN.md)
+
 > 赋予每个物理机器猫独一无二的"灵魂"——能听、会说、会动，且所有行为和语言都与其设定的"人设"高度统一。
 > 
 > 集成 Solana 链上状态管理 + LI.FI 跨链桥 + MagicBlock 隐私交易 + x402 自主代理支付
@@ -22,7 +24,7 @@
 🌐 **https://timeline-transform-volumes-rated.trycloudflare.com**
 
 ### 演示视频
-> 即将发布
+🎬 **https://youtu.be/EfRvZO4WACY**
 
 ## 📖 项目简介
 
@@ -134,8 +136,7 @@ MachineCat/
 │   ├── docker-compose.yml        # 容器编排
 │   └── README.md                 # 仿真文档
 │
-├── complete_project_analysis_v4.md  # 技术实现蓝图
-── development_plan.md              # 开发计划
+── complete_project_analysis_v4.md  # 技术实现蓝图
 ```
 
 ## 🛠️ 技术栈
@@ -316,7 +317,7 @@ PAYMENT_MODE=real
 LIFI_API_KEY=your_key_here
 ```
 
-## 🎯 用户流程（黑客松演示）
+## 🎯 用户流程
 
 **完整闭环：** AI 任务生成 → 用户确认 → 跨链支付 → 链上状态更新
 
@@ -386,7 +387,6 @@ LIFI_API_KEY=your_key_here
 - [合约文档](robot-contract/README.md) - Solana 合约部署地址和 API 文档
 - [合约 API 文档](robot-contract/CONTRACT_API.md) - 合约接口详细说明
 - [Devnet 部署指南](DEPLOY_DEVNET.md) - Devnet 部署步骤和配置
-- [黑客松符合性分析](HACKATHON_ANALYSIS.md) - 参赛要求符合性详细分析
 
 ### 子项目文档
 - [robot-contract/README.md](robot-contract/README.md) - Solana 智能合约文档
