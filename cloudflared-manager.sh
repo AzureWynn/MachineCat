@@ -263,39 +263,64 @@ update_env_file() {
     log_info ".env 文件已更新"
 }
 
-# 启动 cloudflared
+# 启动 cloudflared（带重试机制）
 start_cloudflared() {
-    log_info "启动 cloudflared tunnel -> http://localhost:${LOCAL_PORT}"
+    local max_retries=3
+    local retry_count=0
     
-    # 清理旧的日志和 PID 文件
-    rm -f "$CLOUDFLARED_LOG" "$CLOUDFLARED_PID_FILE"
-    
-    # 启动 cloudflared 后台进程
-    cloudflared tunnel --url "http://localhost:${LOCAL_PORT}" 2>&1 | tee "$CLOUDFLARED_LOG" &
-    local pid=$!
-    
-    echo "$pid" > "$CLOUDFLARED_PID_FILE"
-    log_info "cloudflared 已启动 (PID: $pid)"
-    
-    # 等待 URL 出现
-    local wait_count=0
-    local max_wait=30
-    
-    while [ $wait_count -lt $max_wait ]; do
-        sleep 1
-        local url=$(get_current_url)
-        if [ -n "$url" ]; then
-            log_info "Tunnel URL: $url"
-            
-            # 同步到 Git
-            sync_domain_to_git "$url"
-            
-            return 0
+    while [ $retry_count -lt $max_retries ]; do
+        retry_count=$((retry_count + 1))
+        
+        if [ $retry_count -gt 1 ]; then
+            log_info "第 ${retry_count}/${max_retries} 次尝试启动 cloudflared..."
         fi
-        wait_count=$((wait_count + 1))
+        
+        log_info "启动 cloudflared tunnel -> http://localhost:${LOCAL_PORT}"
+        
+        # 清理旧的日志和 PID 文件
+        rm -f "$CLOUDFLARED_LOG" "$CLOUDFLARED_PID_FILE"
+        
+        # 启动 cloudflared 后台进程
+        cloudflared tunnel --url "http://localhost:${LOCAL_PORT}" 2>&1 | tee "$CLOUDFLARED_LOG" &
+        local pid=$!
+        
+        echo "$pid" > "$CLOUDFLARED_PID_FILE"
+        log_info "cloudflared 已启动 (PID: $pid)"
+        
+        # 等待 URL 出现
+        local wait_count=0
+        local max_wait=30
+        
+        while [ $wait_count -lt $max_wait ]; do
+            sleep 1
+            local url=$(get_current_url)
+            if [ -n "$url" ]; then
+                log_info "Tunnel URL: $url"
+                
+                # 同步到 Git
+                sync_domain_to_git "$url"
+                
+                return 0
+            fi
+            wait_count=$((wait_count + 1))
+        done
+        
+        log_warn "等待 cloudflared URL 超时（${max_wait}s）"
+        
+        # 清理失败的进程
+        if kill -0 "$pid" 2>/dev/null; then
+            kill "$pid" 2>/dev/null || true
+            sleep 1
+        fi
+        
+        # 如果不是最后一次重试，等待 5 秒后重试
+        if [ $retry_count -lt $max_retries ]; then
+            log_info "等待 5 秒后重试..."
+            sleep 5
+        fi
     done
     
-    log_error "等待 cloudflared URL 超时"
+    log_error "cloudflared 启动失败，已重试 ${max_retries} 次"
     return 1
 }
 
