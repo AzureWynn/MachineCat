@@ -64,5 +64,25 @@ if [ -f "${PROJECT_DIR}/cloudflared.log" ]; then
     url=$(grep -oP 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' "${PROJECT_DIR}/cloudflared.log" | tail -1)
     if [ -n "$url" ]; then
         log_info "Tunnel URL: $url"
+        
+        # 自动更新 redirect-app 的域名配置
+        REDIRECT_DIR="${PROJECT_DIR}/redirect-app"
+        URL_FILE="${REDIRECT_DIR}/public/latest-url.txt"
+        
+        if [ -f "$URL_FILE" ]; then
+            log_info "更新 Vercel 重定向域名..."
+            echo "$url" > "$URL_FILE"
+            
+            # Git 提交并推送
+            cd "$REDIRECT_DIR"
+            git add public/latest-url.txt
+            git commit -m "chore: update cloudflared URL to $url"
+            git push
+            
+            log_info "✅ 已自动更新并推送，Vercel 将自动重新部署"
+            log_info "固定访问地址: https://your-project.vercel.app"
+        else
+            log_warn "未找到 redirect-app/public/latest-url.txt，跳过自动更新"
+        fi
     fi
 fi
