@@ -21,7 +21,7 @@
 - 📄 [Devnet Deployment Guide](DEPLOY_DEVNET.md) - Deployment steps and configuration
 
 ### Live Demo
-🌐 **https://confidential-species-broader-reynolds.trycloudflare.com**
+🌐 **https://scuba-biblical-specified-distinguished.trycloudflare.com**
 
 ### Demo Video
 🎬 **https://youtu.be/EfRvZO4WACY**
