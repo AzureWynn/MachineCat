@@ -132,30 +132,21 @@ function DemoPage() {
   const handleChat = async () => {
     if (!chatInput.trim() || !currentRobotId) return;
 
+    if (!walletConnected) {
+      setMessages((prev) => [...prev, { role: 'system', text: 'Please connect wallet first' }]);
+      return;
+    }
+
     setLoading(true);
     const userMessage = { role: 'user', text: chatInput };
     setMessages((prev) => [...prev, userMessage]);
     setChatInput('');
 
     try {
-      // const mockResult = {
-      //   responseText: "喵呜~ 不想出门也没关系，但宅着总会有点闷的！不如我们去小区附近的公园转转好不好？我带你看看有没有可爱的小鸟🐦？",
-      //   quest: {
-      //     id: 'mock-quest-' + Date.now(),
-      //     description: '去附近的咖啡店买一杯热饮',
-      //     cost: 2,
-      //     fromChain: 'ETH',
-      //     toChain: 'SOL',
-      //   }
-      // };
-
-      // Mock LLM response for testing (5s delay)
-      // await new Promise(resolve => setTimeout(resolve, 5000));
-      
       const response = await fetch(`${API_BASE}/interaction/${currentRobotId}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userInput: chatInput }),
+        body: JSON.stringify({ userInput: chatInput, userAddress: walletAddress }),
       });
 
       const result = await response.json();
@@ -379,12 +370,12 @@ function DemoPage() {
             onClick={walletConnected ? disconnectWallet : connectWallet}
             style={{
               ...styles.walletBtn,
-              backgroundColor: walletConnected ? '#00D4FF' : '#fff',
-              borderColor: '#00D4FF',
-              color: walletConnected ? '#fff' : '#00D4FF',
+              backgroundColor: walletConnected ? 'rgba(0, 255, 255, 0.1)' : 'transparent',
+              borderColor: walletConnected ? 'rgba(0, 255, 255, 0.5)' : 'rgba(0, 255, 255, 0.3)',
+              color: walletConnected ? '#00ffff' : '#00ffff',
             }}
           >
-            {walletConnected ? `● ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}` : 'Connect Wallet'}
+            {walletConnected ? `[ ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)} ]` : '[ CONNECT WALLET ]'}
           </button>
         </div>
       </div>
@@ -449,11 +440,11 @@ function DemoPage() {
                   <span style={{ ...styles.btnDot, animationDelay: '0.3s' }}></span>
                 </span>
               ) : (
-                'Confirm & Pay'
+                '[ CONFIRM & PAY ]'
               )}
             </button>
             <button style={styles.cancelBtn} onClick={handleCancelQuest} disabled={loading}>
-              Cancel
+              [ CANCEL ]
             </button>
           </div>
         </div>
@@ -481,7 +472,7 @@ function DemoPage() {
                 <span style={{ ...styles.dot, animationDelay: '0.2s' }}></span>
                 <span style={{ ...styles.dot, animationDelay: '0.4s' }}></span>
               </div>
-              <div style={styles.loadingText}>Thinking...</div>
+              <div style={styles.loadingText}>[ THINKING... ]</div>
             </div>
           )}
         </div>
@@ -496,7 +487,7 @@ function DemoPage() {
             disabled={loading}
           />
           <button onClick={handleChat} disabled={loading || !chatInput.trim()} style={styles.sendBtn}>
-            Send
+            [ SEND ]
           </button>
         </div>
       </div>
@@ -516,10 +507,8 @@ const styles = {
     maxWidth: '800px',
     margin: '0 auto',
     padding: '24px',
-    backgroundColor: '#fafafa',
     minHeight: '100vh',
-    color: '#1a1a1a',
-    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+    color: '#e0e0e0',
   },
   header: {
     display: 'flex',
@@ -527,7 +516,7 @@ const styles = {
     alignItems: 'center',
     marginBottom: '32px',
     paddingBottom: '16px',
-    borderBottom: '2px solid #1a1a1a',
+    borderBottom: '1px solid rgba(0, 255, 255, 0.1)',
   },
   headerControls: {
     display: 'flex',
@@ -536,33 +525,32 @@ const styles = {
   },
   walletBtn: {
     padding: '10px 20px',
-    border: '2px solid #1a1a1a',
+    border: '1px solid',
     borderRadius: '0',
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '600',
     cursor: 'pointer',
-    fontFamily: 'monospace',
+    fontFamily: 'Courier New, monospace',
     transition: 'all 0.2s ease',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
+    letterSpacing: '2px',
   },
   stateContainer: {
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
     gap: '0',
     marginBottom: '32px',
-    border: '2px solid #1a1a1a',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
   },
   stateCard: {
-    backgroundColor: '#fff',
-    borderRight: '1px solid #1a1a1a',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    borderRight: '1px solid rgba(0, 255, 255, 0.1)',
     borderRadius: '0',
     padding: '20px',
     textAlign: 'center',
   },
   stateLabel: {
     fontSize: '10px',
-    color: '#1a1a1a',
+    color: '#00ffff',
     marginBottom: '8px',
     fontWeight: '700',
     textTransform: 'uppercase',
@@ -579,7 +567,7 @@ const styles = {
   },
   progressBar: {
     height: '2px',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: '0',
     overflow: 'hidden',
   },
@@ -589,8 +577,8 @@ const styles = {
     transition: 'width 0.5s ease',
   },
   questCard: {
-    backgroundColor: '#fff',
-    border: '2px solid #1a1a1a',
+    backgroundColor: 'rgba(0, 255, 255, 0.03)',
+    border: '1px solid rgba(0, 255, 255, 0.15)',
     borderRadius: '0',
     padding: '20px',
     marginBottom: '32px',
@@ -609,16 +597,16 @@ const styles = {
     gap: '8px',
     marginBottom: '16px',
     paddingBottom: '12px',
-    borderBottom: '1px solid #1a1a1a',
+    borderBottom: '1px solid rgba(0, 255, 255, 0.1)',
   },
   questIcon: {
     fontSize: '14px',
-    color: '#1a1a1a',
+    color: '#00ffff',
   },
   questTitle: {
     fontSize: '14px',
     fontWeight: '700',
-    color: '#1a1a1a',
+    color: '#00ffff',
     textTransform: 'uppercase',
     letterSpacing: '2px',
   },
@@ -627,37 +615,37 @@ const styles = {
   },
   questDescription: {
     fontSize: '14px',
-    color: '#333',
+    color: '#e0e0e0',
     marginBottom: '16px',
     lineHeight: '1.6',
   },
   questDetails: {
-    backgroundColor: '#fafafa',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     borderRadius: '0',
     padding: '12px',
-    border: '1px solid #1a1a1a',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
   },
   detailRow: {
     display: 'flex',
     justifyContent: 'space-between',
     padding: '8px 0',
-    borderBottom: '1px solid #e0e0e0',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
   },
   detailLabel: {
-    color: '#1a1a1a',
+    color: '#00ffff',
     fontSize: '11px',
     fontWeight: '700',
     textTransform: 'uppercase',
     letterSpacing: '1px',
   },
   detailValue: {
-    color: '#1a1a1a',
+    color: '#e0e0e0',
     fontSize: '13px',
     fontWeight: '600',
-    fontFamily: 'monospace',
+    fontFamily: 'Courier New, monospace',
   },
   arrow: {
-    color: '#1a1a1a',
+    color: '#00ffff',
     margin: '0 4px',
   },
   questActions: {
@@ -668,28 +656,30 @@ const styles = {
   confirmBtn: {
     flex: 1,
     padding: '14px',
-    backgroundColor: '#1a1a1a',
-    color: '#fff',
-    border: '2px solid #1a1a1a',
+    backgroundColor: 'rgba(0, 255, 255, 0.1)',
+    color: '#00ffff',
+    border: '1px solid rgba(0, 255, 255, 0.4)',
     borderRadius: '0',
     fontSize: '13px',
     fontWeight: '700',
     cursor: 'pointer',
     textTransform: 'uppercase',
     letterSpacing: '2px',
+    fontFamily: 'Courier New, monospace',
   },
   cancelBtn: {
     flex: 1,
     padding: '14px',
-    backgroundColor: '#fff',
-    color: '#1a1a1a',
-    border: '2px solid #1a1a1a',
+    backgroundColor: 'transparent',
+    color: '#ef4444',
+    border: '1px solid rgba(239, 68, 68, 0.3)',
     borderRadius: '0',
     fontSize: '13px',
     fontWeight: '700',
     cursor: 'pointer',
     textTransform: 'uppercase',
     letterSpacing: '2px',
+    fontFamily: 'Courier New, monospace',
   },
   btnLoading: {
     display: 'flex',
@@ -700,14 +690,14 @@ const styles = {
   btnDot: {
     width: '6px',
     height: '6px',
-    backgroundColor: '#fff',
+    backgroundColor: '#00ffff',
     borderRadius: '50%',
     display: 'inline-block',
     animation: 'bounce 1.4s infinite ease-in-out both',
   },
   chatContainer: {
-    backgroundColor: '#fff',
-    border: '2px solid #1a1a1a',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
     borderRadius: '0',
     padding: '20px',
   },
@@ -716,32 +706,34 @@ const styles = {
     overflowY: 'auto',
     marginBottom: '16px',
     padding: '12px',
-    backgroundColor: '#fafafa',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     borderRadius: '0',
-    border: '1px solid #1a1a1a',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
   },
   message: {
     padding: '10px 16px',
     marginBottom: '8px',
     borderRadius: '0',
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
     maxWidth: '80%',
     fontSize: '13px',
     lineHeight: '1.5',
-    border: '1px solid #1a1a1a',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
+    color: '#e0e0e0',
   },
   userMessage: {
     marginLeft: 'auto',
-    backgroundColor: '#1a1a1a',
-    color: '#fff',
+    backgroundColor: 'rgba(0, 255, 255, 0.05)',
+    borderColor: 'rgba(0, 255, 255, 0.2)',
+    color: '#ffffff',
   },
   systemMessage: {
     textAlign: 'center',
-    backgroundColor: '#fff',
-    color: '#1a1a1a',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    color: '#00ffff',
     maxWidth: '100%',
     fontSize: '12px',
-    border: '1px dashed #1a1a1a',
+    border: '1px dashed rgba(0, 255, 255, 0.2)',
     opacity: 0,
   },
   systemMessageAnim: {
@@ -749,7 +741,7 @@ const styles = {
   },
   loading: {
     textAlign: 'center',
-    color: '#1a1a1a',
+    color: '#00ffff',
     padding: '20px',
   },
   loadingDots: {
@@ -761,14 +753,14 @@ const styles = {
   dot: {
     width: '8px',
     height: '8px',
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#00ffff',
     borderRadius: '50%',
     display: 'inline-block',
     animation: 'bounce 1.4s infinite ease-in-out both',
   },
   loadingText: {
     fontSize: '12px',
-    color: '#666',
+    color: '#00ffff',
     textTransform: 'uppercase',
     letterSpacing: '2px',
     fontWeight: '600',
@@ -780,36 +772,37 @@ const styles = {
   input: {
     flex: 1,
     padding: '12px',
-    border: '2px solid #1a1a1a',
+    border: '1px solid rgba(0, 255, 255, 0.2)',
     borderRadius: '0',
     fontSize: '13px',
-    backgroundColor: '#fff',
-    color: '#1a1a1a',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    color: '#ffffff',
     outline: 'none',
-    fontFamily: 'monospace',
+    fontFamily: 'Courier New, monospace',
   },
   sendBtn: {
     padding: '12px 24px',
-    backgroundColor: '#1a1a1a',
-    color: '#fff',
-    border: '2px solid #1a1a1a',
+    backgroundColor: 'rgba(0, 255, 255, 0.1)',
+    color: '#00ffff',
+    border: '1px solid rgba(0, 255, 255, 0.4)',
     borderRadius: '0',
     fontSize: '13px',
     fontWeight: '700',
     cursor: 'pointer',
     textTransform: 'uppercase',
     letterSpacing: '2px',
+    fontFamily: 'Courier New, monospace',
   },
   txHash: {
     marginTop: '24px',
     padding: '16px',
-    backgroundColor: '#fff',
-    border: '2px solid #1a1a1a',
+    backgroundColor: 'rgba(0, 255, 255, 0.03)',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
     borderRadius: '0',
   },
   txHashTitle: {
     fontSize: '10px',
-    color: '#1a1a1a',
+    color: '#00ffff',
     marginBottom: '8px',
     fontWeight: '700',
     textTransform: 'uppercase',
@@ -817,8 +810,8 @@ const styles = {
   },
   txHashValue: {
     fontSize: '11px',
-    color: '#1a1a1a',
-    fontFamily: 'monospace',
+    color: '#e0e0e0',
+    fontFamily: 'Courier New, monospace',
     wordBreak: 'break-all',
   },
 };

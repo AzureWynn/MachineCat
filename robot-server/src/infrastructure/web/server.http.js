@@ -1,12 +1,13 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../../../.env') });
 const Koa = require('koa');
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
-const path = require('path');
 const connectDB = require('../database/connect');
 const RobotHTTPConnector = require('../../core/robot-control/infrastructure/robot-connector.http');
 const InteractionService = require('../../core/ai-interaction/application/interaction.service');
+const LLMClient = require('../../core/ai-interaction/infrastructure/llm.client');
 const healthRouter = require('./routes/health.routes');
 const personalityRouter = require('./routes/personality.routes');
 const { router: interactionRouter, setInteractionService, setRobotConnector } = require('./routes/interaction.routes');
@@ -16,6 +17,10 @@ const solanaRouter = require('./routes/solana.routes');
 const solanaService = require('../../core/blockchain/solana.service');
 const paymentRouter = require('./routes/payment.routes');
 const paymentService = require('../../core/blockchain/payment.service');
+
+console.log('[Env] LLM_API_URL:', process.env.LLM_API_URL);
+console.log('[Env] LLM_MODEL:', process.env.LLM_MODEL);
+console.log('[Env] USE_LLM_MOCK:', process.env.USE_LLM_MOCK);
 
 const app = new Koa();
 

@@ -11,10 +11,11 @@ class InteractionService {
     this.responseParser = new ResponseParser();
   }
 
-  async processInteraction(robotId, userInput) {
+  async processInteraction(robotId, userInput, userAddress) {
     console.log(`\n[Chat] ===== 开始处理聊天请求 =====`);
     console.log(`[Chat] 机器猫ID: ${robotId}`);
     console.log(`[Chat] 用户输入: ${userInput}`);
+    console.log(`[Chat] 用户钱包: ${userAddress || '未连接'}`);
 
     const personality = await PersonalityService.getPersonalityByRobotId(robotId);
 

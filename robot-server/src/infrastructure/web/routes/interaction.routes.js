@@ -14,10 +14,23 @@ function setRobotConnector(connector) {
   robotConnector = connector;
 }
 
-router.post('/:robotId/chat', koaBody(), async (ctx) => {
+const checkWalletMiddleware = async (ctx, next) => {
+  const { userAddress } = ctx.request.body;
+  
+  if (!userAddress) {
+    ctx.status = 401;
+    ctx.body = { error: 'Wallet not connected. Please connect wallet first.' };
+    return;
+  }
+  
+  console.log(`[Wallet] 用户钱包地址: ${userAddress}`);
+  await next();
+};
+
+router.post('/:robotId/chat', koaBody(), checkWalletMiddleware, async (ctx) => {
   try {
     const { robotId } = ctx.params;
-    const { userInput } = ctx.request.body;
+    const { userInput, userAddress } = ctx.request.body;
 
     if (!userInput) {
       ctx.status = 400;
@@ -25,7 +38,7 @@ router.post('/:robotId/chat', koaBody(), async (ctx) => {
       return;
     }
 
-    const result = await interactionService.processInteraction(robotId, userInput);
+    const result = await interactionService.processInteraction(robotId, userInput, userAddress);
 
     ctx.status = 200;
     ctx.body = result;
