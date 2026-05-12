@@ -18,30 +18,16 @@ function RobotStatus() {
   const getStatusColor = () => {
     switch (wsStatus) {
       case 'connected':
-        return '#4caf50';
+        return '#22c55e';
       case 'connecting':
-        return '#ff9800';
+        return '#eab308';
       default:
-        return '#f44336';
+        return '#ef4444';
     }
   };
 
   return (
     <div style={styles.container}>
-      {/* <div style={styles.statusItem}>
-        <span style={styles.label}>状态:</span>
-        <span style={{ ...styles.dot, backgroundColor: getStatusColor() }}></span>
-        <span style={styles.value}>{getStatusText()}</span>
-      </div>
-      {batteryLevel !== null && (
-        <div style={styles.statusItem}>
-          <span style={styles.label}>电量:</span>
-          <span style={styles.value}>{batteryLevel}%</span>
-          <div style={styles.batteryBar}>
-            <div style={{ ...styles.batteryFill, width: `${batteryLevel}%` }}></div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }
@@ -51,8 +37,8 @@ const styles = {
     display: 'flex',
     gap: '20px',
     padding: '10px 20px',
-    backgroundColor: '#f5f5f5',
-    borderRadius: '8px',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
     alignItems: 'center',
   },
   statusItem: {
@@ -61,29 +47,35 @@ const styles = {
     gap: '8px',
   },
   label: {
-    fontWeight: 'bold',
-    color: '#666',
+    fontWeight: '600',
+    color: '#00ffff',
+    fontSize: '11px',
+    letterSpacing: '2px',
   },
   value: {
-    color: '#333',
+    color: '#e0e0e0',
+    fontSize: '12px',
+    fontFamily: 'Courier New, monospace',
   },
   dot: {
     width: '10px',
     height: '10px',
     borderRadius: '50%',
     display: 'inline-block',
+    boxShadow: '0 0 8px currentColor',
   },
   batteryBar: {
     width: '100px',
     height: '10px',
-    backgroundColor: '#ddd',
-    borderRadius: '5px',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: '0',
     overflow: 'hidden',
   },
   batteryFill: {
     height: '100%',
-    backgroundColor: '#4caf50',
+    backgroundColor: '#22c55e',
     transition: 'width 0.3s ease',
+    boxShadow: '0 0 8px rgba(34, 197, 94, 0.5)',
   },
 };
 

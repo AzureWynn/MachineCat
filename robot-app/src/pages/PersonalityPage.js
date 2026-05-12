@@ -92,43 +92,47 @@ function PersonalityPage() {
   if (dataLoading) {
     return (
       <div style={styles.container}>
-        <p style={{ textAlign: 'center', color: '#666' }}>加载中...</p>
+        <p style={styles.loadingText}>[ LOADING... ]</p>
       </div>
     );
   }
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>机器人个性设置</h2>
+      <div style={styles.header}>
+        <h2 style={styles.title}>PERSONALITY</h2>
+        <p style={styles.subtitle}>配置机器猫个性参数</p>
+      </div>
+
       <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.formGroup}>
-          <label style={styles.label}>机器人 ID</label>
+          <label style={styles.label}>ROBOT ID</label>
           <input
             type="text"
             name="robotId"
             value={formData.robotId}
             onChange={handleChange}
-            placeholder="例如：robot-001"
+            placeholder="robot-001"
             style={styles.input}
             required
           />
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>名字</label>
+          <label style={styles.label}>NAME</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="例如：小喵"
+            placeholder="小喵"
             style={styles.input}
             required
           />
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>种类</label>
+          <label style={styles.label}>TYPE</label>
           <select
             name="type"
             value={formData.type}
@@ -144,7 +148,7 @@ function PersonalityPage() {
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>性格特征</label>
+          <label style={styles.label}>TRAITS</label>
           {traits.map(trait => (
             <div key={trait.code} style={styles.traitRow}>
               <span style={styles.traitLabel} title={trait.description}>
@@ -166,13 +170,14 @@ function PersonalityPage() {
         </div>
 
         <button type="submit" style={styles.button} disabled={loading}>
-          {loading ? '保存中...' : '保存'}
+          {loading ? '[ SAVING... ]' : '[ SAVE ]'}
         </button>
 
         {message && (
           <div style={{
             ...styles.message,
-            color: message.includes('成功') ? '#4caf50' : '#f44336',
+            color: message.includes('成功') ? '#22c55e' : '#ef4444',
+            borderColor: message.includes('成功') ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)',
           }}>
             {message}
           </div>
@@ -186,17 +191,36 @@ const styles = {
   container: {
     maxWidth: '600px',
     margin: '0 auto',
-    padding: '20px',
-    backgroundColor: 'white',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+    padding: '30px 20px',
   },
-  title: {
+  loadingText: {
     textAlign: 'center',
-    color: '#333',
+    color: '#00ffff',
+    fontFamily: 'Courier New, monospace',
+    letterSpacing: '2px',
+    animation: 'pulse 1.5s ease-in-out infinite',
+  },
+  header: {
+    textAlign: 'center',
     marginBottom: '30px',
   },
+  title: {
+    fontSize: '28px',
+    fontWeight: '700',
+    color: '#ffffff',
+    letterSpacing: '4px',
+    marginBottom: '8px',
+    textShadow: '0 0 10px rgba(0, 255, 255, 0.3)',
+  },
+  subtitle: {
+    fontSize: '13px',
+    color: '#666',
+    letterSpacing: '2px',
+  },
   form: {
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
+    padding: '30px',
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
@@ -207,21 +231,30 @@ const styles = {
     gap: '8px',
   },
   label: {
-    fontWeight: 'bold',
-    color: '#555',
+    fontWeight: '600',
+    color: '#00ffff',
+    fontSize: '11px',
+    letterSpacing: '2px',
   },
   input: {
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
+    padding: '12px',
+    border: '1px solid rgba(0, 255, 255, 0.2)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    color: '#ffffff',
     fontSize: '14px',
+    fontFamily: 'Courier New, monospace',
+    outline: 'none',
+    transition: 'border-color 0.3s ease',
   },
   select: {
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
+    padding: '12px',
+    border: '1px solid rgba(0, 255, 255, 0.2)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    color: '#ffffff',
     fontSize: '14px',
-    backgroundColor: 'white',
+    fontFamily: 'Courier New, monospace',
+    outline: 'none',
+    cursor: 'pointer',
   },
   traitRow: {
     display: 'flex',
@@ -231,33 +264,45 @@ const styles = {
   },
   traitLabel: {
     width: '60px',
-    color: '#666',
+    color: '#888',
+    fontSize: '12px',
     cursor: 'help',
   },
   traitValue: {
     width: '40px',
     textAlign: 'right',
-    color: '#1976d2',
-    fontWeight: 'bold',
+    color: '#00ffff',
+    fontWeight: '600',
+    fontSize: '12px',
+    fontFamily: 'Courier New, monospace',
   },
   slider: {
     flex: 1,
+    height: '4px',
+    backgroundColor: 'rgba(0, 255, 255, 0.2)',
+    borderRadius: '2px',
+    outline: 'none',
+    appearance: 'none',
   },
   button: {
-    padding: '12px',
-    backgroundColor: '#1976d2',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '16px',
+    padding: '14px',
+    backgroundColor: 'transparent',
+    color: '#00ffff',
+    border: '1px solid rgba(0, 255, 255, 0.4)',
+    fontSize: '14px',
+    fontWeight: '600',
+    letterSpacing: '3px',
     cursor: 'pointer',
-    marginTop: '10px',
+    transition: 'all 0.3s ease',
+    fontFamily: 'Courier New, monospace',
   },
   message: {
     textAlign: 'center',
-    padding: '10px',
-    backgroundColor: '#f5f5f5',
-    borderRadius: '4px',
+    padding: '12px',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    border: '1px solid',
+    fontSize: '13px',
+    fontFamily: 'Courier New, monospace',
   },
 };
 

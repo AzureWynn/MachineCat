@@ -6,42 +6,73 @@ function Home() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>欢迎使用机器猫平台</h1>
-      <p style={styles.subtitle}>个性化智能交互平台</p>
+      <div style={styles.hero}>
+        <h1 style={styles.title}>MACHINECAT</h1>
+        <p style={styles.subtitle}>跨链隐私支付智能机器猫平台</p>
+        <p style={styles.tagline}>&lt;赋予每个物理机器猫独一无二的"灵魂" /&gt;</p>
+      </div>
 
       <div style={styles.cards}>
         <div style={styles.card}>
-          <h3 style={styles.cardTitle}>1. 设置个性</h3>
+          <div style={styles.cardIcon}>🎨</div>
+          <h3 style={styles.cardTitle}>设置个性</h3>
           <p style={styles.cardDesc}>
             为你的机器猫创建独特的个性，包括名字、种类和性格特征。
           </p>
-          <Link to="/personality" style={styles.button}>
-            开始设置
+          <Link to="/personality" style={styles.cardButton}>
+            开始设置 →
           </Link>
         </div>
 
         <div style={styles.card}>
-          <h3 style={styles.cardTitle}>2. 跨链支付演示</h3>
+          <div style={styles.cardIcon}>🔗</div>
+          <h3 style={styles.cardTitle}>跨链支付演示</h3>
           <p style={styles.cardDesc}>
             体验 AI 任务生成、跨链支付和链上状态更新的完整流程。
           </p>
-          <Link to="/demo" style={styles.button}>
-            进入演示
+          <Link to="/demo" style={styles.cardButton}>
+            进入演示 →
+          </Link>
+        </div>
+
+        <div style={styles.card}>
+          <div style={styles.cardIcon}>💬</div>
+          <h3 style={styles.cardTitle}>AI 对话</h3>
+          <p style={styles.cardDesc}>
+            与机器猫进行自然语言交互，体验个性化 AI 回复。
+          </p>
+          <Link to="/chat" style={styles.cardButton}>
+            开始聊天 →
+          </Link>
+        </div>
+
+        <div style={styles.card}>
+          <div style={styles.cardIcon}>🎮</div>
+          <h3 style={styles.cardTitle}>机器人控制</h3>
+          <p style={styles.cardDesc}>
+            发送指令控制机器猫动作，实时查看状态反馈。
+          </p>
+          <Link to="/control" style={styles.cardButton}>
+            控制面板 →
           </Link>
         </div>
       </div>
 
       {currentRobotId && (
         <div style={styles.currentRobot}>
-          <h3>当前机器人</h3>
-          <p>ID: {currentRobotId}</p>
-          {personality && (
-            <>
-              <p>名字: {personality.name}</p>
-              <p>种类: {personality.type}</p>
-              {/* <p>品种: {personality.breed}</p> */}
-            </>
-          )}
+          <div style={styles.robotHeader}>
+            <span style={styles.robotDot} />
+            <span style={styles.robotLabel}>CURRENT ROBOT</span>
+          </div>
+          <div style={styles.robotInfo}>
+            <p style={styles.robotId}>ID: {currentRobotId}</p>
+            {personality && (
+              <>
+                <p style={styles.robotName}>🤖 {personality.name}</p>
+                <p style={styles.robotType}>TYPE: {personality.type}</p>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -52,60 +83,132 @@ const styles = {
   container: {
     textAlign: 'center',
     padding: '40px 20px',
+    maxWidth: '1000px',
+    margin: '0 auto',
+  },
+  hero: {
+    marginBottom: '50px',
   },
   title: {
-    fontSize: '36px',
-    color: '#333',
-    marginBottom: '10px',
+    fontSize: 'clamp(36px, 8vw, 72px)',
+    fontWeight: '900',
+    color: '#ffffff',
+    letterSpacing: '8px',
+    marginBottom: '15px',
+    textShadow: '0 0 20px rgba(0, 255, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.2)',
   },
   subtitle: {
-    fontSize: '18px',
-    color: '#666',
-    marginBottom: '40px',
+    fontSize: 'clamp(14px, 3vw, 20px)',
+    color: '#00ffff',
+    letterSpacing: '4px',
+    marginBottom: '10px',
+    textShadow: '0 0 10px rgba(0, 255, 255, 0.3)',
+  },
+  tagline: {
+    fontSize: '13px',
+    color: '#555',
+    fontFamily: 'Courier New, monospace',
   },
   cards: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '30px',
-    flexWrap: 'wrap',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gap: '20px',
     marginBottom: '40px',
   },
   card: {
-    backgroundColor: 'white',
-    padding: '30px',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-    width: '300px',
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
+    padding: '30px 20px',
     textAlign: 'center',
+    transition: 'all 0.3s ease',
+    position: 'relative',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: '220px',
   },
-  cardTitle: {
-    fontSize: '24px',
-    color: '#1976d2',
+  cardIcon: {
+    fontSize: '36px',
     marginBottom: '15px',
   },
+  cardTitle: {
+    fontSize: '16px',
+    fontWeight: '700',
+    color: '#00ffff',
+    marginBottom: '12px',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+  },
   cardDesc: {
-    color: '#666',
+    color: '#888',
     marginBottom: '20px',
     lineHeight: '1.6',
+    fontSize: '13px',
   },
-  button: {
+  cardButton: {
     display: 'inline-block',
-    padding: '10px 20px',
-    backgroundColor: '#1976d2',
-    color: 'white',
+    padding: '8px 20px',
+    color: '#00ffff',
     textDecoration: 'none',
-    borderRadius: '4px',
-    transition: 'background-color 0.2s',
+    fontSize: '12px',
+    fontWeight: '600',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+    border: '1px solid rgba(0, 255, 255, 0.3)',
+    transition: 'all 0.3s ease',
   },
   currentRobot: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(0, 255, 255, 0.03)',
+    border: '1px solid rgba(0, 255, 255, 0.15)',
     padding: '20px',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
     maxWidth: '400px',
     margin: '0 auto',
+  },
+  robotHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    marginBottom: '12px',
+  },
+  robotDot: {
+    width: '8px',
+    height: '8px',
+    borderRadius: '50%',
+    backgroundColor: '#22c55e',
+    boxShadow: '0 0 8px rgba(34, 197, 94, 0.6)',
+    animation: 'pulse 1.5s ease-in-out infinite',
+  },
+  robotLabel: {
+    fontSize: '11px',
+    color: '#22c55e',
+    letterSpacing: '2px',
+    fontWeight: '600',
+  },
+  robotInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+  },
+  robotId: {
+    fontSize: '12px',
+    color: '#666',
+    fontFamily: 'Courier New, monospace',
+    margin: 0,
+  },
+  robotName: {
+    fontSize: '18px',
+    color: '#ffffff',
+    margin: 0,
+  },
+  robotType: {
+    fontSize: '12px',
+    color: '#a855f7',
+    letterSpacing: '2px',
+    margin: 0,
   },
 };
 
 export default Home;
-

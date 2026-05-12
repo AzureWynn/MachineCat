@@ -7,37 +7,89 @@ function Navbar() {
 
   return (
     <nav style={styles.nav}>
-      <div style={styles.brand}>
-        <img src="/logo1.png" alt="bu-zhai" style={styles.logo} />
-        <div style={styles.brandText}>
-          <span style={styles.brandName}>bu-zhai</span>
-          <span style={styles.brandSubtitle}>ON-CHAIN COMPANION</span>
+      <div style={styles.navInner}>
+        <div style={styles.brand}>
+          <img src="/logo.jpg" alt="bu-zhai" style={styles.logo} />
+          <div style={styles.brandText}>
+            <span style={styles.brandName}>bu-zhai</span>
+            <span style={styles.brandSubtitle}>ON-CHAIN COMPANION</span>
+          </div>
+        </div>
+        <div style={styles.links}>
+          <Link
+            to="/"
+            style={{
+              ...styles.link,
+              ...(isActive('/') ? styles.activeLink : {}),
+            }}
+          >
+            HOME
+          </Link>
+          <Link
+            to="/personality"
+            style={{
+              ...styles.link,
+              ...(isActive('/personality') ? styles.activeLink : {}),
+            }}
+          >
+            PERSONALITY
+          </Link>
+          <Link
+            to="/chat"
+            style={{
+              ...styles.link,
+              ...(isActive('/chat') ? styles.activeLink : {}),
+            }}
+          >
+            CHAT
+          </Link>
+          <Link
+            to="/control"
+            style={{
+              ...styles.link,
+              ...(isActive('/control') ? styles.activeLink : {}),
+            }}
+          >
+            CONTROL
+          </Link>
+          <Link
+            to="/demo"
+            style={{
+              ...styles.link,
+              ...(isActive('/demo') ? styles.activeLink : {}),
+            }}
+          >
+            DEMO
+          </Link>
         </div>
       </div>
-      <div style={styles.links}>
-        <Link
-          to="/demo"
-          style={{
-            ...styles.link,
-            ...(isActive('/demo') ? styles.activeLink : {}),
-          }}
-        >
-          Demo
-        </Link>
-      </div>
+      <div style={styles.neonLine} />
     </nav>
   );
 }
 
 const styles = {
   nav: {
+    position: 'sticky',
+    top: 0,
+    zIndex: 100,
+    backgroundColor: 'rgba(10, 10, 15, 0.95)',
+    backdropFilter: 'blur(10px)',
+    borderBottom: '1px solid rgba(0, 255, 255, 0.1)',
+  },
+  navInner: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '0 24px',
-    backgroundColor: '#1a1a1a',
     height: '64px',
-    borderBottom: '2px solid #00D4FF',
+    maxWidth: '1200px',
+    margin: '0 auto',
+  },
+  neonLine: {
+    height: '1px',
+    background: 'linear-gradient(90deg, transparent, #00ffff, #a855f7, transparent)',
+    animation: 'pulse 3s ease-in-out infinite',
   },
   brand: {
     display: 'flex',
@@ -47,7 +99,8 @@ const styles = {
   logo: {
     width: '36px',
     height: '36px',
-    borderRadius: '0',
+    borderRadius: '50%',
+    filter: 'drop-shadow(0 0 8px rgba(0, 255, 255, 0.5))',
   },
   brandText: {
     display: 'flex',
@@ -58,32 +111,37 @@ const styles = {
     fontSize: '18px',
     fontWeight: '700',
     color: '#ffffff',
-    letterSpacing: '2px',
+    letterSpacing: '3px',
+    textShadow: '0 0 10px rgba(0, 255, 255, 0.5)',
   },
   brandSubtitle: {
     fontSize: '9px',
-    color: '#00D4FF',
+    color: '#00ffff',
     letterSpacing: '3px',
     fontWeight: '600',
   },
   links: {
     display: 'flex',
-    gap: '20px',
+    gap: '8px',
   },
   link: {
-    color: '#888',
+    color: '#666',
     textDecoration: 'none',
     padding: '8px 16px',
     borderRadius: '0',
-    transition: 'all 0.2s',
-    fontSize: '12px',
+    transition: 'all 0.3s ease',
+    fontSize: '11px',
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: '2px',
+    border: '1px solid transparent',
+    position: 'relative',
   },
   activeLink: {
-    backgroundColor: '#00D4FF',
-    color: '#1a1a1a',
+    color: '#00ffff',
+    borderColor: 'rgba(0, 255, 255, 0.3)',
+    backgroundColor: 'rgba(0, 255, 255, 0.05)',
+    textShadow: '0 0 8px rgba(0, 255, 255, 0.5)',
   },
 };
 

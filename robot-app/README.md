@@ -7,7 +7,6 @@
 - 📄 [主项目 README](../README.md) - 项目总览和黑客松信息
 - 📄 [合约文档](../robot-contract/README.md) - Solana 合约文档
 - 📄 [后端服务](../robot-server/) - Node.js 后端代码
-- 📄 [黑客松符合性分析](../HACKATHON_ANALYSIS.md) - 参赛要求分析
 
 ## 技术栈
 

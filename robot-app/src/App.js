@@ -42,12 +42,16 @@ function App() {
 const styles = {
   app: {
     minHeight: '100vh',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#0a0a0f',
+    position: 'relative',
+    overflow: 'hidden',
   },
   main: {
     maxWidth: '1200px',
     margin: '0 auto',
     padding: '20px',
+    position: 'relative',
+    zIndex: 1,
   },
 };
 

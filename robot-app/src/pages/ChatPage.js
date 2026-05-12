@@ -8,35 +8,14 @@ function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingMode, setRecordingMode] = useState(null);
-  // const [isSpeaking, setIsSpeaking] = useState(false);
-  // const [voiceEnabled, setVoiceEnabled] = useState(true);
-  // const [voiceIndex, setVoiceIndex] = useState(0);
-  // const [availableVoices, setAvailableVoices] = useState([]);
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
-  // const speechSynthRef = useRef(window.speechSynthesis);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  useEffect(() => {
-    // const loadVoices = () => {
-    //   const voices = speechSynthRef.current.getVoices();
-    //   const zhVoices = voices.filter(v => v.lang.startsWith('zh'));
-    //   setAvailableVoices(zhVoices);
-    //   console.log('[Voice] Available Chinese voices:', zhVoices.map(v => `${v.name} (${v.lang})`));
-    // };
-
-    // loadVoices();
-    // speechSynthRef.current.onvoiceschanged = loadVoices;
-
-    // return () => {
-    //   speechSynthRef.current.onvoiceschanged = null;
-    // };
-  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -87,37 +66,8 @@ function ChatPage() {
       if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
         mediaRecorderRef.current.stop();
       }
-      // speechSynthRef.current?.cancel();
     };
   }, []);
-
-  // const speakText = (text) => {
-  //   if (!voiceEnabled || !text) return;
-
-  //   speechSynthRef.current.cancel();
-
-  //   const utterance = new SpeechSynthesisUtterance(text);
-  //   utterance.lang = 'zh-CN';
-  //   utterance.rate = 1.0;
-  //   utterance.pitch = 1.2;
-  //   utterance.volume = 1.0;
-
-  //   if (availableVoices.length > 0 && availableVoices[voiceIndex]) {
-  //     utterance.voice = availableVoices[voiceIndex];
-  //     console.log(`[Voice] Using voice: ${availableVoices[voiceIndex].name}`);
-  //   }
-
-  //   utterance.onstart = () => setIsSpeaking(true);
-  //   utterance.onend = () => setIsSpeaking(false);
-  //   utterance.onerror = () => setIsSpeaking(false);
-
-  //   speechSynthRef.current.speak(utterance);
-  // };
-
-  // const switchVoice = () => {
-  //   if (availableVoices.length <= 1) return;
-  //   setVoiceIndex((prev) => (prev + 1) % availableVoices.length);
-  // };
 
   const startMediaRecording = async () => {
     try {
@@ -208,8 +158,6 @@ function ChatPage() {
         timestamp: new Date(),
       };
       addMessage(botMessage);
-      
-      // speakText(response.data.responseText);
     } catch (error) {
       const errorMessage = {
         role: 'system',
@@ -232,19 +180,22 @@ function ChatPage() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h3 style={styles.title}>
-          {personality ? `与 ${personality.name} 聊天` : '聊天'}
-        </h3>
+        <div style={styles.headerLeft}>
+          <span style={styles.headerIcon}></span>
+          <h3 style={styles.title}>
+            {personality ? `${personality.name}` : 'CHAT'}
+          </h3>
+        </div>
         {messages.length > 0 && (
           <button onClick={clearMessages} style={styles.clearBtn}>
-            清空聊天
+            CLEAR
           </button>
         )}
       </div>
 
       {!currentRobotId && (
         <div style={styles.warning}>
-          请先在"个性设置"页面创建或选择一个机器人
+          [ WARNING ] 请先在"个性设置"页面创建或选择一个机器人
         </div>
       )}
 
@@ -257,16 +208,12 @@ function ChatPage() {
               ...(msg.role === 'user' ? styles.userMessage : msg.role === 'system' ? styles.systemMessage : styles.botMessage),
             }}
           >
-            <div
-              style={styles.messageContent}
-              // onClick={() => msg.role === 'bot' && speakText(msg.content)}
-              // title={msg.role === 'bot' ? '点击重新播放语音' : ''}
-            >
+            <div style={styles.messageContent}>
               {msg.content}
             </div>
             {msg.actions && msg.actions.length > 0 && (
               <div style={styles.actions}>
-                <span style={styles.actionsLabel}>执行动作:</span>
+                <span style={styles.actionsLabel}>ACTIONS:</span>
                 {msg.actions.map((action, i) => (
                   <span key={i} style={styles.actionTag}>
                     {action.action}({JSON.stringify(action.params)})
@@ -281,38 +228,20 @@ function ChatPage() {
         ))}
         {loading && (
           <div style={{ ...styles.messageBubble, ...styles.botMessage }}>
-            <div style={styles.typing}>思考中...</div>
+            <div style={styles.typing}>[ THINKING... ]</div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
       <div style={styles.inputArea}>
-        {/* <button
-          onClick={() => setVoiceEnabled(!voiceEnabled)}
-          style={{
-            ...styles.voiceToggleBtn,
-            backgroundColor: voiceEnabled ? '#4caf50' : '#757575',
-          }}
-          title={voiceEnabled ? '关闭语音播报' : '开启语音播报'}
-        >
-          {voiceEnabled ? '' : '🔇'}
-        </button>
-        {voiceEnabled && availableVoices.length > 1 && (
-          <button
-            onClick={switchVoice}
-            style={styles.voiceSwitchBtn}
-            title={`切换声线: ${availableVoices[voiceIndex]?.name || '默认'}`}
-          >
-            🎵
-          </button>
-        )} */}
         {recordingMode !== 'none' && (
           <button
             onClick={toggleRecording}
             style={{
               ...styles.micBtn,
-              backgroundColor: isRecording ? '#f44336' : '#757575',
+              backgroundColor: isRecording ? '#ef4444' : '#333',
+              borderColor: isRecording ? 'rgba(239, 68, 68, 0.5)' : 'rgba(0, 255, 255, 0.3)',
             }}
             title={isRecording ? '停止录音' : '语音输入'}
           >
@@ -324,7 +253,7 @@ function ChatPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder={isRecording ? '正在录音...' : '输入消息...'}
+          placeholder={isRecording ? '[ RECORDING... ]' : '输入消息...'}
           style={styles.input}
           disabled={!currentRobotId || loading}
         />
@@ -336,7 +265,7 @@ function ChatPage() {
           }}
           disabled={!input.trim() || !currentRobotId || loading}
         >
-          发送
+          SEND
         </button>
       </div>
     </div>
@@ -347,9 +276,8 @@ const styles = {
   container: {
     maxWidth: '800px',
     margin: '0 auto',
-    backgroundColor: 'white',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
     display: 'flex',
     flexDirection: 'column',
     height: '70vh',
@@ -359,25 +287,46 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '15px 20px',
-    borderBottom: '1px solid #eee',
+    borderBottom: '1px solid rgba(0, 255, 255, 0.1)',
+  },
+  headerLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  },
+  headerIcon: {
+    width: '8px',
+    height: '8px',
+    borderRadius: '50%',
+    backgroundColor: '#00ffff',
+    boxShadow: '0 0 8px rgba(0, 255, 255, 0.6)',
   },
   title: {
     margin: 0,
-    color: '#333',
+    color: '#ffffff',
+    fontSize: '16px',
+    fontWeight: '600',
+    letterSpacing: '2px',
   },
   clearBtn: {
-    padding: '5px 10px',
-    backgroundColor: '#f5f5f5',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    cursor: 'pointer',
+    padding: '6px 12px',
+    backgroundColor: 'transparent',
+    border: '1px solid rgba(0, 255, 255, 0.2)',
     color: '#666',
+    cursor: 'pointer',
+    fontSize: '11px',
+    letterSpacing: '2px',
+    transition: 'all 0.3s ease',
   },
   warning: {
     padding: '15px 20px',
-    backgroundColor: '#fff3cd',
-    color: '#856404',
+    backgroundColor: 'rgba(234, 179, 8, 0.1)',
+    border: '1px solid rgba(234, 179, 8, 0.3)',
+    color: '#eab308',
     textAlign: 'center',
+    fontSize: '12px',
+    fontFamily: 'Courier New, monospace',
+    letterSpacing: '1px',
   },
   messages: {
     flex: 1,
@@ -385,114 +334,108 @@ const styles = {
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px',
+    gap: '12px',
   },
   messageBubble: {
-    maxWidth: '70%',
-    padding: '10px 15px',
-    borderRadius: '12px',
+    maxWidth: '75%',
+    padding: '12px 16px',
+    borderRadius: '0',
     wordBreak: 'break-word',
+    border: '1px solid',
   },
   userMessage: {
     alignSelf: 'flex-end',
-    backgroundColor: '#1976d2',
-    color: 'white',
+    backgroundColor: 'rgba(0, 255, 255, 0.05)',
+    borderColor: 'rgba(0, 255, 255, 0.2)',
+    color: '#e0e0e0',
   },
   botMessage: {
     alignSelf: 'flex-start',
-    backgroundColor: '#f0f0f0',
-    color: '#333',
+    backgroundColor: 'rgba(168, 85, 247, 0.05)',
+    borderColor: 'rgba(168, 85, 247, 0.2)',
+    color: '#e0e0e0',
   },
   systemMessage: {
     alignSelf: 'center',
-    backgroundColor: '#ffebee',
-    color: '#c62828',
+    backgroundColor: 'rgba(239, 68, 68, 0.05)',
+    borderColor: 'rgba(239, 68, 68, 0.2)',
+    color: '#ef4444',
     textAlign: 'center',
   },
   messageContent: {
     marginBottom: '5px',
-  },
-  botMessageContent: {
-    marginBottom: '5px',
-    cursor: 'pointer',
+    fontSize: '14px',
+    lineHeight: '1.5',
   },
   actions: {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: '5px',
+    gap: '6px',
     marginTop: '8px',
     paddingTop: '8px',
-    borderTop: '1px dashed #ccc',
+    borderTop: '1px dashed rgba(0, 255, 255, 0.2)',
   },
   actionsLabel: {
-    fontSize: '12px',
-    color: '#666',
+    fontSize: '10px',
+    color: '#00ffff',
+    letterSpacing: '1px',
+    fontWeight: '600',
   },
   actionTag: {
-    fontSize: '11px',
-    backgroundColor: '#e3f2fd',
-    color: '#1976d2',
+    fontSize: '10px',
+    backgroundColor: 'rgba(0, 255, 255, 0.1)',
+    color: '#00ffff',
     padding: '2px 6px',
-    borderRadius: '4px',
+    border: '1px solid rgba(0, 255, 255, 0.2)',
+    fontFamily: 'Courier New, monospace',
   },
   timestamp: {
     fontSize: '10px',
-    opacity: 0.7,
+    color: '#555',
     textAlign: 'right',
     marginTop: '5px',
+    fontFamily: 'Courier New, monospace',
   },
   typing: {
-    color: '#999',
+    color: '#00ffff',
     fontStyle: 'italic',
+    fontSize: '13px',
+    animation: 'pulse 1.5s ease-in-out infinite',
   },
   inputArea: {
     display: 'flex',
     padding: '15px',
-    borderTop: '1px solid #eee',
+    borderTop: '1px solid rgba(0, 255, 255, 0.1)',
     gap: '10px',
-  },
-  voiceToggleBtn: {
-    padding: '10px 15px',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '18px',
-    minWidth: '45px',
-  },
-  voiceSwitchBtn: {
-    padding: '10px 15px',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '18px',
-    minWidth: '45px',
-    backgroundColor: '#2196f3',
   },
   micBtn: {
     padding: '10px 15px',
     color: 'white',
-    border: 'none',
-    borderRadius: '4px',
+    border: '1px solid',
     cursor: 'pointer',
-    fontSize: '18px',
+    fontSize: '16px',
+    transition: 'all 0.3s ease',
   },
   input: {
     flex: 1,
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
+    padding: '12px',
+    border: '1px solid rgba(0, 255, 255, 0.2)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    color: '#ffffff',
     fontSize: '14px',
+    fontFamily: 'Courier New, monospace',
+    outline: 'none',
   },
   sendBtn: {
-    padding: '10px 20px',
-    backgroundColor: '#1976d2',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
+    padding: '12px 24px',
+    backgroundColor: 'transparent',
+    color: '#00ffff',
+    border: '1px solid rgba(0, 255, 255, 0.4)',
     cursor: 'pointer',
-    fontSize: '14px',
+    fontSize: '12px',
+    fontWeight: '600',
+    letterSpacing: '2px',
+    transition: 'all 0.3s ease',
   },
 };
 

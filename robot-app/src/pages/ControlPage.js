@@ -90,11 +90,14 @@ function ControlPage() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>🎮 机器人控制调试</h1>
+      <div style={styles.header}>
+        <h1 style={styles.title}>CONTROL</h1>
+        <p style={styles.subtitle}>机器人指令控制面板</p>
+      </div>
       
       <div style={styles.controlPanel}>
         <div style={styles.row}>
-          <label style={styles.label}>机器人 ID:</label>
+          <label style={styles.label}>ROBOT ID</label>
           <input
             type="text"
             value={robotId}
@@ -104,17 +107,18 @@ function ControlPage() {
           />
           {personality && (
             <span style={styles.robotName}>
-              🤖 {personality.name}
+              {personality.name}
             </span>
           )}
           <button
             onClick={testConnection}
             style={{
               ...styles.button,
-              backgroundColor: connectionStatus === 'connected' ? '#4caf50' : '#ff9800',
+              borderColor: connectionStatus === 'connected' ? 'rgba(34, 197, 94, 0.5)' : 'rgba(234, 179, 8, 0.5)',
+              color: connectionStatus === 'connected' ? '#22c55e' : '#eab308',
             }}
           >
-            {connectionStatus === 'connected' ? '✅ 已连接' : '🔍 测试连接'}
+            {connectionStatus === 'connected' ? '[ CONNECTED ]' : '[ TEST ]'}
           </button>
         </div>
       </div>
@@ -139,24 +143,24 @@ function ControlPage() {
 
       <div style={styles.logPanel}>
         <div style={styles.logHeader}>
-          <h3 style={styles.logTitle}>📋 日志</h3>
+          <h3 style={styles.logTitle}>[ LOGS ]</h3>
           <button onClick={clearLogs} style={styles.clearButton}>
-            清空
+            CLEAR
           </button>
         </div>
         <div style={styles.logContent}>
           {logs.length === 0 ? (
-            <p style={styles.emptyLog}>暂无日志</p>
+            <p style={styles.emptyLog}>[ NO LOGS ]</p>
           ) : (
             logs.map((log, index) => (
               <div
                 key={index}
                 style={{
                   ...styles.logEntry,
-                  color: log.type === 'error' ? '#f44336' :
-                         log.type === 'success' ? '#4caf50' :
-                         log.type === 'warning' ? '#ff9800' :
-                         log.type === 'send' ? '#2196f3' : '#666',
+                  color: log.type === 'error' ? '#ef4444' :
+                         log.type === 'success' ? '#22c55e' :
+                         log.type === 'warning' ? '#eab308' :
+                         log.type === 'send' ? '#00ffff' : '#666',
                 }}
               >
                 <span style={styles.logTime}>{log.timestamp}</span>
@@ -176,17 +180,27 @@ const styles = {
     maxWidth: '1200px',
     margin: '0 auto',
   },
+  header: {
+    textAlign: 'center',
+    marginBottom: '30px',
+  },
   title: {
     fontSize: '28px',
-    color: '#333',
-    marginBottom: '20px',
-    textAlign: 'center',
+    fontWeight: '700',
+    color: '#ffffff',
+    letterSpacing: '4px',
+    marginBottom: '8px',
+    textShadow: '0 0 10px rgba(0, 255, 255, 0.3)',
+  },
+  subtitle: {
+    fontSize: '13px',
+    color: '#666',
+    letterSpacing: '2px',
   },
   controlPanel: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
     padding: '20px',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
     marginBottom: '20px',
   },
   row: {
@@ -196,32 +210,39 @@ const styles = {
     flexWrap: 'wrap',
   },
   label: {
-    fontSize: '14px',
-    color: '#666',
-    fontWeight: 'bold',
+    fontSize: '11px',
+    color: '#00ffff',
+    fontWeight: '600',
+    letterSpacing: '2px',
   },
   input: {
-    padding: '8px 12px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
+    padding: '10px 12px',
+    border: '1px solid rgba(0, 255, 255, 0.2)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    color: '#ffffff',
     fontSize: '14px',
+    fontFamily: 'Courier New, monospace',
     flex: '1',
     minWidth: '200px',
+    outline: 'none',
   },
   robotName: {
     fontSize: '14px',
-    color: '#1976d2',
-    fontWeight: 'bold',
+    color: '#00ffff',
+    fontWeight: '600',
     padding: '0 10px',
+    textShadow: '0 0 8px rgba(0, 255, 255, 0.3)',
   },
   button: {
-    padding: '8px 16px',
-    backgroundColor: '#1976d2',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
+    padding: '10px 16px',
+    backgroundColor: 'transparent',
+    border: '1px solid',
     cursor: 'pointer',
-    fontSize: '14px',
+    fontSize: '11px',
+    fontWeight: '600',
+    letterSpacing: '2px',
+    fontFamily: 'Courier New, monospace',
+    transition: 'all 0.3s ease',
   },
   commandsGrid: {
     display: 'grid',
@@ -234,31 +255,29 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     padding: '20px',
-    backgroundColor: 'white',
-    border: '2px solid #e0e0e0',
-    borderRadius: '8px',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
     cursor: 'pointer',
     transition: 'all 0.2s',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
   },
   commandIcon: {
     fontSize: '32px',
     marginBottom: '8px',
   },
   commandName: {
-    fontSize: '16px',
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: '14px',
+    fontWeight: '600',
+    color: '#ffffff',
     marginBottom: '4px',
   },
   commandAction: {
-    fontSize: '12px',
-    color: '#999',
+    fontSize: '10px',
+    color: '#666',
+    fontFamily: 'Courier New, monospace',
   },
   logPanel: {
-    backgroundColor: 'white',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    border: '1px solid rgba(0, 255, 255, 0.1)',
     overflow: 'hidden',
   },
   logHeader: {
@@ -266,44 +285,48 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '15px 20px',
-    backgroundColor: '#f5f5f5',
-    borderBottom: '1px solid #e0e0e0',
+    borderBottom: '1px solid rgba(0, 255, 255, 0.1)',
   },
   logTitle: {
     margin: 0,
-    fontSize: '16px',
-    color: '#333',
+    fontSize: '14px',
+    color: '#00ffff',
+    fontWeight: '600',
+    letterSpacing: '2px',
+    fontFamily: 'Courier New, monospace',
   },
   clearButton: {
     padding: '6px 12px',
-    backgroundColor: '#f44336',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
+    backgroundColor: 'transparent',
+    color: '#ef4444',
+    border: '1px solid rgba(239, 68, 68, 0.3)',
     cursor: 'pointer',
-    fontSize: '12px',
+    fontSize: '11px',
+    letterSpacing: '2px',
+    fontFamily: 'Courier New, monospace',
+    transition: 'all 0.3s ease',
   },
   logContent: {
     padding: '15px',
     maxHeight: '400px',
     overflowY: 'auto',
-    backgroundColor: '#fafafa',
-    fontFamily: 'monospace',
-    fontSize: '13px',
+    fontFamily: 'Courier New, monospace',
+    fontSize: '12px',
   },
   emptyLog: {
-    color: '#999',
+    color: '#555',
     textAlign: 'center',
     padding: '20px',
+    fontFamily: 'Courier New, monospace',
   },
   logEntry: {
     padding: '5px 0',
-    borderBottom: '1px solid #f0f0f0',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
     display: 'flex',
     gap: '10px',
   },
   logTime: {
-    color: '#999',
+    color: '#555',
     minWidth: '80px',
   },
 };

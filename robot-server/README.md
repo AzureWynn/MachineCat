@@ -7,7 +7,6 @@
 - 📄 [主项目 README](../README.md) - 项目总览和黑客松信息
 - 📄 [合约文档](../robot-contract/README.md) - Solana 合约文档
 - 📄 [前端应用](../robot-app/) - React 前端代码
-- 📄 [黑客松符合性分析](../HACKATHON_ANALYSIS.md) - 参赛要求分析
 - 📄 [Devnet 部署指南](../DEPLOY_DEVNET.md) - 部署步骤
 
 ## 技术栈
