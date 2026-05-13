@@ -39,22 +39,13 @@ class LLMClient {
   }
 
   mockGenerateResponse(prompt) {
-    const hasNegativeEmotion = /不想|无聊|没意思|烦|郁闷|难过|焦虑|生气|累/.test(prompt);
+    const hasNegativeEmotion = /^(.*(?:不想出门|不想动|好无聊|太无聊|无聊死了|烦死了|郁闷死了|难过死了|焦虑死了|不想活了|没意思透了|累死了|好累啊|真烦|烦得很|郁闷得很|焦虑得很|难过得很))+$/i.test(prompt);
 
     if (hasNegativeEmotion) {
-      return {
-        text: '喵~ 不想出门也没关系，但宅着总会有点闷的！不如我们去小区附近的公园转转好不好？我带你看看有没有可爱的小鸟🐦？',
-        actions: [
-          { action: 'sit', params: {} },
-        ],
-        quest: {
-          id: 'mock-quest-' + Date.now(),
-          description: '去附近的公园散步',
-          cost: 2,
-          fromChain: 'ETH',
-          toChain: 'SOL',
-        },
-      };
+      const questResponses = this.mockResponses.filter(r => r.quest !== null);
+      if (questResponses.length > 0) {
+        return questResponses[Math.floor(Math.random() * questResponses.length)];
+      }
     }
 
     if (!this.mockResponses || this.mockUsedIndices.size >= this.mockResponses.length) {
