@@ -1,10 +1,9 @@
 const Router = require('@koa/router');
-const koaBody = require('koa-bodyparser');
 const paymentService = require('../../../core/blockchain/payment.service');
 
 const router = new Router({ prefix: '/api/payment' });
 
-router.post('/quote', koaBody(), async (ctx) => {
+router.post('/quote', async (ctx) => {
   try {
     const { fromChain, toChain, amount, fromToken, toToken, userAddress } = ctx.request.body;
     
@@ -25,7 +24,7 @@ router.post('/quote', koaBody(), async (ctx) => {
   }
 });
 
-router.post('/transfer', koaBody(), async (ctx) => {
+router.post('/transfer', async (ctx) => {
   try {
     const { quote, userAddress } = ctx.request.body;
     
@@ -67,7 +66,7 @@ router.get('/status', async (ctx) => {
   }
 });
 
-router.post('/private', koaBody(), async (ctx) => {
+router.post('/private', async (ctx) => {
   try {
     const { fromAddress, toAddress, amount } = ctx.request.body;
     
@@ -88,7 +87,7 @@ router.post('/private', koaBody(), async (ctx) => {
   }
 });
 
-router.post('/process', koaBody(), async (ctx) => {
+router.post('/process', async (ctx) => {
   try {
     const { robotId, paymentDetails } = ctx.request.body;
     

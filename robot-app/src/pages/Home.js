@@ -48,7 +48,7 @@ function Home() {
 
         <div style={styles.card}>
           <div style={styles.cardIcon}>🎮</div>
-          <h3 style={styles.cardTitle}>机器人控制</h3>
+          <h3 style={styles.cardTitle}>机器猫控制</h3>
           <p style={styles.cardDesc}>
             发送指令控制机器猫动作，实时查看状态反馈。
           </p>

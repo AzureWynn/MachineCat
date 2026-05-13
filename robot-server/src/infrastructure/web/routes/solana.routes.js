@@ -1,5 +1,4 @@
 const Router = require('@koa/router');
-const koaBody = require('koa-bodyparser');
 const solanaService = require('../../../core/blockchain/solana.service');
 
 const router = new Router({ prefix: '/api/solana' });
@@ -20,7 +19,7 @@ router.get('/state/:robotId', async (ctx) => {
   }
 });
 
-router.post('/state/init', koaBody(), async (ctx) => {
+router.post('/state/init', async (ctx) => {
   try {
     const { robotId, userAddress } = ctx.request.body;
     
@@ -42,7 +41,7 @@ router.post('/state/init', koaBody(), async (ctx) => {
   }
 });
 
-router.post('/state/update', koaBody(), async (ctx) => {
+router.post('/state/update', async (ctx) => {
   try {
     const { robotId, moodDelta, bondDelta, energyDelta, streakDelta } = ctx.request.body;
     
@@ -69,7 +68,7 @@ router.post('/state/update', koaBody(), async (ctx) => {
   }
 });
 
-router.post('/quest/complete', koaBody(), async (ctx) => {
+router.post('/quest/complete', async (ctx) => {
   try {
     const { robotId } = ctx.request.body;
     
@@ -90,7 +89,7 @@ router.post('/quest/complete', koaBody(), async (ctx) => {
   }
 });
 
-router.post('/transaction/build', koaBody(), async (ctx) => {
+router.post('/transaction/build', async (ctx) => {
   try {
     const { robotId, userAddress } = ctx.request.body;
     
@@ -118,7 +117,7 @@ router.post('/transaction/build', koaBody(), async (ctx) => {
   }
 });
 
-router.post('/transaction/init', koaBody(), async (ctx) => {
+router.post('/transaction/init', async (ctx) => {
   try {
     const { robotId, userAddress } = ctx.request.body;
     

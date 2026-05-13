@@ -1,5 +1,4 @@
 const Router = require('@koa/router');
-const koaBody = require('koa-bodyparser');
 
 const router = new Router({ prefix: '/api/interaction' });
 
@@ -14,7 +13,7 @@ function setRobotConnector(connector) {
   robotConnector = connector;
 }
 
-router.post('/:robotId/chat', koaBody(), async (ctx) => {
+router.post('/:robotId/chat', async (ctx) => {
   try {
     const { robotId } = ctx.params;
     const { userInput, userAddress } = ctx.request.body;
@@ -36,7 +35,7 @@ router.post('/:robotId/chat', koaBody(), async (ctx) => {
   }
 });
 
-router.post('/:robotId/command', koaBody(), async (ctx) => {
+router.post('/:robotId/command', async (ctx) => {
   try {
     const { robotId } = ctx.params;
     const { action } = ctx.request.body;

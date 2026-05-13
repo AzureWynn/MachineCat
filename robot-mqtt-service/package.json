@@ -1,0 +1,27 @@
+{
+  "name": "robot-mqtt-service",
+  "version": "1.0.0",
+  "description": "MQTT Broker service for robot hardware communication",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "node test-mqtt.js"
+  },
+  "keywords": ["mqtt", "robot", "iot"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/router": "^15.5.0",
+    "dotenv": "^17.4.2",
+    "ioredis": "^5.10.1",
+    "koa": "^3.2.0",
+    "koa-bodyparser": "^4.4.1",
+    "mqtt": "^5.15.1",
+    "uuid": "^9.0.0",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}

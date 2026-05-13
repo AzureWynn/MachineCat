@@ -1,11 +1,10 @@
 const Router = require('@koa/router');
 const PersonalityService = require('../../../core/robot-personality/application/personality.service');
-const koaBody = require('koa-bodyparser');
 
 const router = new Router({ prefix: '/api/personalities' });
 
 // 创建或更新机器人个性
-router.post('/:robotId', koaBody(), async (ctx) => {
+router.post('/:robotId', async (ctx) => {
   try {
     const { robotId } = ctx.params;
     const personalityData = ctx.request.body;

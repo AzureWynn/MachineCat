@@ -1,9 +1,26 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
 
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    navigate('/login');
+  };
 
   return (
     <nav style={styles.nav}>
@@ -61,6 +78,14 @@ function Navbar() {
           >
             DEMO
           </Link>
+          {user && (
+            <div style={styles.userSection}>
+              <span style={styles.userName}>{user.nickname || user.email}</span>
+              <button style={styles.logoutBtn} onClick={handleLogout}>
+                LOGOUT
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div style={styles.neonLine} />
@@ -123,6 +148,34 @@ const styles = {
   links: {
     display: 'flex',
     gap: '8px',
+    alignItems: 'center',
+  },
+  userSection: {
+    display: 'flex',
+    gap: '12px',
+    alignItems: 'center',
+    marginLeft: '16px',
+    paddingLeft: '16px',
+    borderLeft: '1px solid rgba(0, 255, 255, 0.2)',
+  },
+  userName: {
+    color: '#00ffff',
+    fontSize: '11px',
+    fontWeight: '600',
+    fontFamily: 'Courier New, monospace',
+    letterSpacing: '1px',
+  },
+  logoutBtn: {
+    padding: '6px 12px',
+    backgroundColor: 'transparent',
+    border: '1px solid rgba(255, 107, 107, 0.3)',
+    color: '#FF6B6B',
+    fontSize: '10px',
+    fontWeight: '600',
+    fontFamily: 'Courier New, monospace',
+    cursor: 'pointer',
+    letterSpacing: '2px',
+    transition: 'all 0.2s ease',
   },
   link: {
     color: '#666',
