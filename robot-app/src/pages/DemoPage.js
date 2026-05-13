@@ -137,8 +137,48 @@ function DemoPage() {
       return;
     }
 
+    const userInput = chatInput.trim();
+
+    const specialResponses = [
+      {
+        keywords: ['天气', '出去走走', '陪我', '外面'],
+        minMatch: 2,
+        response: '天气正好，23度，西风轻吹，门开着，风在等你。',
+        quest: null,
+      },
+      {
+        keywords: ['饮料', '喝的', '买', '推荐', '奶茶', '布丁'],
+        minMatch: 2,
+        response: '外面23度，微风，冰奶茶加布丁，刚好，蓝牙已就绪，我陪你走。',
+        quest: '去附近买一杯冰奶茶加布丁',
+      },
+    ];
+
+    for (const rule of specialResponses) {
+      const matchCount = rule.keywords.filter((kw) => userInput.includes(kw)).length;
+      if (matchCount >= rule.minMatch) {
+        setLoading(true);
+        const userMessage = { role: 'user', text: userInput };
+        setMessages((prev) => [...prev, userMessage]);
+        setChatInput('');
+
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+
+        const botMessage = { role: 'bot', text: rule.response };
+        setMessages((prev) => [...prev, botMessage]);
+
+        if (rule.quest) {
+          setQuest({ description: rule.quest });
+        }
+
+        await fetchRobotState();
+        setLoading(false);
+        return;
+      }
+    }
+
     setLoading(true);
-    const userMessage = { role: 'user', text: chatInput };
+    const userMessage = { role: 'user', text: userInput };
     setMessages((prev) => [...prev, userMessage]);
     setChatInput('');
 
@@ -146,7 +186,7 @@ function DemoPage() {
       const response = await fetch(`${API_BASE}/interaction/${currentRobotId}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userInput: chatInput, userAddress: walletAddress }),
+        body: JSON.stringify({ userInput: userInput, userAddress: walletAddress }),
       });
 
       const result = await response.json();

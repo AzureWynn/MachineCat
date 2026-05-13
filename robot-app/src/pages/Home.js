@@ -8,52 +8,52 @@ function Home() {
     <div style={styles.container}>
       <div style={styles.hero}>
         <h1 style={styles.title}>MACHINECAT</h1>
-        <p style={styles.subtitle}>跨链隐私支付智能机器猫平台</p>
-        <p style={styles.tagline}>&lt;赋予每个物理机器猫独一无二的"灵魂" /&gt;</p>
+        <p style={styles.subtitle}>Cross-Chain Privacy Payment Smart Robot Cat Platform</p>
+        <p style={styles.tagline}>&lt;Giving each physical robot cat a unique "soul" /&gt;</p>
       </div>
 
       <div style={styles.cards}>
         <div style={styles.card}>
           <div style={styles.cardIcon}>🎨</div>
-          <h3 style={styles.cardTitle}>设置个性</h3>
+          <h3 style={styles.cardTitle}>Personality</h3>
           <p style={styles.cardDesc}>
-            为你的机器猫创建独特的个性，包括名字、种类和性格特征。
+            Create unique personality
           </p>
           <Link to="/personality" style={styles.cardButton}>
-            开始设置 →
+            Setup →
           </Link>
         </div>
 
         <div style={styles.card}>
           <div style={styles.cardIcon}>🔗</div>
-          <h3 style={styles.cardTitle}>跨链支付演示</h3>
+          <h3 style={styles.cardTitle}>Cross-Chain Demo</h3>
           <p style={styles.cardDesc}>
-            体验 AI 任务生成、跨链支付和链上状态更新的完整流程。
+            AI tasks & cross-chain payment
           </p>
           <Link to="/demo" style={styles.cardButton}>
-            进入演示 →
+            Enter Demo →
           </Link>
         </div>
 
         <div style={styles.card}>
           <div style={styles.cardIcon}>💬</div>
-          <h3 style={styles.cardTitle}>AI 对话</h3>
+          <h3 style={styles.cardTitle}>AI Chat</h3>
           <p style={styles.cardDesc}>
-            与机器猫进行自然语言交互，体验个性化 AI 回复。
+            Natural language chat
           </p>
           <Link to="/chat" style={styles.cardButton}>
-            开始聊天 →
+            Start Chat →
           </Link>
         </div>
 
         <div style={styles.card}>
           <div style={styles.cardIcon}>🎮</div>
-          <h3 style={styles.cardTitle}>机器猫控制</h3>
+          <h3 style={styles.cardTitle}>Robot Control</h3>
           <p style={styles.cardDesc}>
-            发送指令控制机器猫动作，实时查看状态反馈。
+            Send commands to control
           </p>
           <Link to="/control" style={styles.cardButton}>
-            控制面板 →
+            Control Panel →
           </Link>
         </div>
       </div>

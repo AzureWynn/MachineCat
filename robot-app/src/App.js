@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useStore } from './store/store';
 import Navbar from './components/Navbar';
@@ -18,6 +18,17 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
+function Layout() {
+  return (
+    <>
+      <Navbar />
+      <main style={styles.main}>
+        <Outlet />
+      </main>
+    </>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -28,19 +39,16 @@ function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <Navbar />
-                <main style={styles.main}>
-                  <Routes>
-                    <Route index element={<Home />} />
-                    <Route path="personality" element={<PersonalityPage />} />
-                    <Route path="chat" element={<ChatPage />} />
-                    <Route path="control" element={<ControlPage />} />
-                    <Route path="demo" element={<DemoPage />} />
-                  </Routes>
-                </main>
+                <Layout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<Home />} />
+            <Route path="personality" element={<PersonalityPage />} />
+            <Route path="chat" element={<ChatPage />} />
+            <Route path="control" element={<ControlPage />} />
+            <Route path="demo" element={<DemoPage />} />
+          </Route>
         </Routes>
       </div>
     </BrowserRouter>

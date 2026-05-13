@@ -102,8 +102,8 @@ export default function Home() {
           )}
         </div>
 
-        <p className="subtitle">跨链隐私支付智能机器猫平台</p>
-        <p className="tagline">&lt;赋予每个物理机器猫独一无二的"灵魂" /&gt;</p>
+        <p className="subtitle">Cross-Chain Privacy Payment Smart Robot Cat Platform</p>
+        <p className="tagline">&lt;Giving each physical robot cat a unique "soul" /&gt;</p>
 
         {/* Bar 装饰 */}
         <div className="bar-container">
