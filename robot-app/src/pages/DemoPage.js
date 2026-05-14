@@ -420,11 +420,11 @@ function DemoPage() {
         </div>
       </div>
 
-      <div style={styles.stateContainer}>
+      <div style={styles.stateContainer} className="demo-state-container">
         {stateCards.map(({ key, label, icon, color }) => (
-          <div key={key} style={styles.stateCard}>
-            <div style={styles.stateLabel}>{label}</div>
-            <div style={{ ...styles.stateValue, color }}>
+          <div key={key} style={styles.stateCard} className="demo-state-card">
+            <div style={styles.stateLabel} className="demo-state-label">{label}</div>
+            <div style={{ ...styles.stateValue, color }} className="demo-state-value">
               {robotState ? robotState[key] : '-'}
               {key !== 'streak' && <span style={styles.stateMax}>/100</span>}
             </div>
@@ -516,7 +516,7 @@ function DemoPage() {
             </div>
           )}
         </div>
-        <div style={styles.chatInput}>
+        <div style={styles.chatInput} className="demo-chat-input">
           <input
             type="text"
             value={chatInput}
@@ -524,9 +524,10 @@ function DemoPage() {
             onKeyPress={(e) => e.key === 'Enter' && handleChat()}
             placeholder="Type a message..."
             style={styles.input}
+            className="demo-chat-input-field"
             disabled={loading}
           />
-          <button onClick={handleChat} disabled={loading || !chatInput.trim()} style={styles.sendBtn}>
+          <button onClick={handleChat} disabled={loading || !chatInput.trim()} style={styles.sendBtn} className="demo-send-btn">
             [ SEND ]
           </button>
         </div>
@@ -580,26 +581,35 @@ const styles = {
     gap: '0',
     marginBottom: '32px',
     border: '1px solid rgba(0, 255, 255, 0.1)',
+    overflow: 'hidden',
   },
   stateCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.02)',
     borderRight: '1px solid rgba(0, 255, 255, 0.1)',
     borderRadius: '0',
-    padding: '20px',
+    padding: '16px 8px',
     textAlign: 'center',
+    minWidth: 0,
+    overflow: 'hidden',
   },
   stateLabel: {
-    fontSize: '10px',
+    fontSize: '9px',
     color: '#00ffff',
-    marginBottom: '8px',
+    marginBottom: '6px',
     fontWeight: '700',
     textTransform: 'uppercase',
-    letterSpacing: '2px',
+    letterSpacing: '1px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   stateValue: {
-    fontSize: '32px',
+    fontSize: '28px',
     fontWeight: '700',
-    marginBottom: '12px',
+    marginBottom: '10px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   stateMax: {
     fontSize: '14px',
@@ -808,9 +818,11 @@ const styles = {
   chatInput: {
     display: 'flex',
     gap: '12px',
+    alignItems: 'center',
   },
   input: {
     flex: 1,
+    minWidth: 0,
     padding: '12px',
     border: '1px solid rgba(0, 255, 255, 0.2)',
     borderRadius: '0',
@@ -821,7 +833,7 @@ const styles = {
     fontFamily: 'Courier New, monospace',
   },
   sendBtn: {
-    padding: '12px 24px',
+    padding: '12px 16px',
     backgroundColor: 'rgba(0, 255, 255, 0.1)',
     color: '#00ffff',
     border: '1px solid rgba(0, 255, 255, 0.4)',
@@ -832,6 +844,8 @@ const styles = {
     textTransform: 'uppercase',
     letterSpacing: '2px',
     fontFamily: 'Courier New, monospace',
+    whiteSpace: 'nowrap',
+    flexShrink: 0,
   },
   txHash: {
     marginTop: '24px',

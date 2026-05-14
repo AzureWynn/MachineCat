@@ -148,4 +148,33 @@ code {
     padding: 8px 12px !important;
     font-size: 14px !important;
   }
+
+  /* Demo page mobile */
+  .demo-chat-input {
+    gap: 8px !important;
+  }
+  .demo-chat-input-field {
+    padding: 10px !important;
+    font-size: 12px !important;
+  }
+  .demo-send-btn {
+    padding: 10px 12px !important;
+    font-size: 11px !important;
+    letter-spacing: 1px !important;
+  }
+
+  /* Demo state cards mobile */
+  .demo-state-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .demo-state-card {
+    padding: 12px 6px !important;
+  }
+  .demo-state-label {
+    font-size: 8px !important;
+    letter-spacing: 0.5px !important;
+  }
+  .demo-state-value {
+    font-size: 22px !important;
+  }
 }
