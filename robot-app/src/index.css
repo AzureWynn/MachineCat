@@ -129,4 +129,23 @@ code {
     padding-top: 12px;
     margin-top: 8px;
   }
+
+  /* Chat input area mobile */
+  .chat-input-area {
+    padding: 10px !important;
+    gap: 8px !important;
+  }
+  .chat-send-btn {
+    padding: 10px 12px !important;
+    font-size: 11px !important;
+    letter-spacing: 1px !important;
+  }
+  .chat-input {
+    padding: 10px !important;
+    font-size: 13px !important;
+  }
+  .chat-mic-btn {
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+  }
 }

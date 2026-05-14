@@ -234,10 +234,11 @@ function ChatPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      <div style={styles.inputArea}>
+      <div style={styles.inputArea} className="chat-input-area">
         {recordingMode !== 'none' && (
           <button
             onClick={toggleRecording}
+            className="chat-mic-btn"
             style={{
               ...styles.micBtn,
               backgroundColor: isRecording ? '#ef4444' : '#333',
@@ -254,11 +255,13 @@ function ChatPage() {
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder={isRecording ? '[ RECORDING... ]' : '输入消息...'}
+          className="chat-input"
           style={styles.input}
           disabled={!currentRobotId || loading}
         />
         <button
           onClick={handleSend}
+          className="chat-send-btn"
           style={{
             ...styles.sendBtn,
             opacity: !input.trim() || !currentRobotId || loading ? 0.5 : 1,
@@ -407,6 +410,7 @@ const styles = {
     padding: '15px',
     borderTop: '1px solid rgba(0, 255, 255, 0.1)',
     gap: '10px',
+    alignItems: 'center',
   },
   micBtn: {
     padding: '10px 15px',
@@ -415,9 +419,11 @@ const styles = {
     cursor: 'pointer',
     fontSize: '16px',
     transition: 'all 0.3s ease',
+    flexShrink: 0,
   },
   input: {
     flex: 1,
+    minWidth: 0,
     padding: '12px',
     border: '1px solid rgba(0, 255, 255, 0.2)',
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
@@ -427,7 +433,7 @@ const styles = {
     outline: 'none',
   },
   sendBtn: {
-    padding: '12px 24px',
+    padding: '12px 20px',
     backgroundColor: 'transparent',
     color: '#00ffff',
     border: '1px solid rgba(0, 255, 255, 0.4)',
@@ -436,6 +442,8 @@ const styles = {
     fontWeight: '600',
     letterSpacing: '2px',
     transition: 'all 0.3s ease',
+    whiteSpace: 'nowrap',
+    flexShrink: 0,
   },
 };
 
