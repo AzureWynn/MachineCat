@@ -156,7 +156,7 @@ class SolanaService {
 
   async buildUpdateStateTransaction(robotId, moodDelta, bondDelta, energyDelta, streakDelta, userPublicKey) {
     if (!this.initialized) {
-      return this.mockBuildUpdateStateTransaction();
+      return { success: false, error: 'Solana service not initialized' };
     }
 
     const userPubkey = new PublicKey(userPublicKey);
@@ -188,7 +188,7 @@ class SolanaService {
 
   async buildInitializeTransaction(robotId, userPublicKey) {
     if (!this.initialized) {
-      return this.mockBuildInitializeTransaction();
+      return { success: false, error: 'Solana service not initialized' };
     }
 
     const userPubkey = new PublicKey(userPublicKey);
@@ -287,30 +287,6 @@ class SolanaService {
     return {
       success: true,
       tx: 'mock-tx-' + Date.now(),
-    };
-  }
-
-  mockBuildUpdateStateTransaction() {
-    console.log('[Mock] 构建状态更新交易');
-    const mockTx = {
-      instructions: [],
-      recentBlockhash: 'mock-blockhash-' + Date.now(),
-      feePayer: null,
-      serialize: () => Buffer.from('mock-transaction'),
-    };
-    return {
-      success: true,
-      transaction: Buffer.from('mock-transaction-data-' + Date.now()).toString('base64'),
-      blockhash: 'mock-blockhash-' + Date.now(),
-    };
-  }
-
-  mockBuildInitializeTransaction() {
-    console.log('[Mock] 构建初始化交易');
-    return {
-      success: true,
-      transaction: Buffer.from('mock-init-transaction-data-' + Date.now()).toString('base64'),
-      blockhash: 'mock-blockhash-' + Date.now(),
     };
   }
 }
