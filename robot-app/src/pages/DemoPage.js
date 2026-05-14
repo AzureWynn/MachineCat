@@ -150,7 +150,12 @@ function DemoPage() {
         keywords: ['饮料', '喝的', '买', '推荐', '奶茶', '布丁'],
         minMatch: 2,
         response: '外面23度，微风，冰奶茶加布丁，刚好，蓝牙已就绪，我陪你走。',
-        quest: '去附近买一杯冰奶茶加布丁',
+        quest: {
+          description: '去附近买一杯冰奶茶加布丁',
+          cost: 5,
+          fromChain: 'Ethereum',
+          toChain: 'Solana',
+        },
       },
     ];
 
@@ -168,7 +173,7 @@ function DemoPage() {
         setMessages((prev) => [...prev, botMessage]);
 
         if (rule.quest) {
-          setQuest({ description: rule.quest });
+          setQuest(rule.quest);
         }
 
         await fetchRobotState();
@@ -219,6 +224,11 @@ function DemoPage() {
       return;
     }
 
+    if (!quest.cost) {
+      setMessages((prev) => [...prev, { role: 'system', text: 'Quest cost not available, please try again' }]);
+      return;
+    }
+
     setLoading(true);
     setMessages((prev) => [...prev, { role: 'system', text: 'Processing cross-chain payment...' }]);
 
@@ -234,9 +244,9 @@ function DemoPage() {
           body: JSON.stringify({
             robotId: currentRobotId,
             paymentDetails: {
-              amount: quest.cost.toString(),
-              fromChain: quest.fromChain === 'Ethereum' ? 'ETH' : quest.fromChain,
-              toChain: quest.toChain === 'Solana' ? 'SOL' : quest.toChain,
+              amount: String(quest.cost),
+              fromChain: quest.fromChain === 'Ethereum' ? 'ETH' : (quest.fromChain || 'ETH'),
+              toChain: quest.toChain === 'Solana' ? 'SOL' : (quest.toChain || 'SOL'),
               fromToken: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
               toToken: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
               userAddress: walletAddress,
@@ -331,9 +341,9 @@ function DemoPage() {
           body: JSON.stringify({
             robotId: currentRobotId,
             paymentDetails: {
-              amount: quest.cost.toString(),
-              fromChain: quest.fromChain,
-              toChain: quest.toChain,
+              amount: String(quest.cost),
+              fromChain: quest.fromChain || 'ETH',
+              toChain: quest.toChain || 'SOL',
               fromToken: 'USDC',
               toToken: 'USDC',
               userAddress: walletAddress,
@@ -455,14 +465,14 @@ function DemoPage() {
             <div style={styles.questDetails}>
               <div style={styles.detailRow}>
                 <span style={styles.detailLabel}>Cost</span>
-                <span style={styles.detailValue}>{quest.cost} USDC</span>
+                <span style={styles.detailValue}>{quest.cost || 0} USDC</span>
               </div>
               <div style={styles.detailRow}>
                 <span style={styles.detailLabel}>Cross-Chain</span>
                 <span style={styles.detailValue}>
-                  {quest.fromChain}
+                  {quest.fromChain || 'ETH'}
                   <span style={styles.arrow}> → </span>
-                  {quest.toChain}
+                  {quest.toChain || 'SOL'}
                 </span>
               </div>
               <div style={styles.detailRow}>
