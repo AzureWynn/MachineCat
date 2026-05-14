@@ -5,6 +5,7 @@ function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -32,54 +33,73 @@ function Navbar() {
             <span style={styles.brandSubtitle}>ON-CHAIN COMPANION</span>
           </div>
         </div>
-        <div style={styles.links}>
+        <button
+          className="navbar-hamburger"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className="navbar-hamburger-line" />
+          <span className="navbar-hamburger-line" />
+          <span className="navbar-hamburger-line" />
+        </button>
+        <div className={`navbar-links ${mobileMenuOpen ? 'open' : ''}`}>
           <Link
             to="/"
+            className="navbar-link"
             style={{
               ...styles.link,
               ...(isActive('/') ? styles.activeLink : {}),
             }}
+            onClick={() => setMobileMenuOpen(false)}
           >
             HOME
           </Link>
           <Link
             to="/personality"
+            className="navbar-link"
             style={{
               ...styles.link,
               ...(isActive('/personality') ? styles.activeLink : {}),
             }}
+            onClick={() => setMobileMenuOpen(false)}
           >
             PERSONALITY
           </Link>
           <Link
             to="/chat"
+            className="navbar-link"
             style={{
               ...styles.link,
               ...(isActive('/chat') ? styles.activeLink : {}),
             }}
+            onClick={() => setMobileMenuOpen(false)}
           >
             CHAT
           </Link>
           <Link
             to="/control"
+            className="navbar-link"
             style={{
               ...styles.link,
               ...(isActive('/control') ? styles.activeLink : {}),
             }}
+            onClick={() => setMobileMenuOpen(false)}
           >
             CONTROL
           </Link>
           <Link
             to="/demo"
+            className="navbar-link"
             style={{
               ...styles.link,
               ...(isActive('/demo') ? styles.activeLink : {}),
             }}
+            onClick={() => setMobileMenuOpen(false)}
           >
             DEMO
           </Link>
           {user && (
-            <div style={styles.userSection}>
+            <div className="navbar-user-section" style={styles.userSection}>
               <span style={styles.userName}>{user.nickname || user.email}</span>
               <button style={styles.logoutBtn} onClick={handleLogout}>
                 LOGOUT
@@ -106,10 +126,11 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '0 24px',
+    padding: '0 16px',
     height: '64px',
     maxWidth: '1200px',
     margin: '0 auto',
+    position: 'relative',
   },
   neonLine: {
     height: '1px',
@@ -144,11 +165,6 @@ const styles = {
     color: '#00ffff',
     letterSpacing: '3px',
     fontWeight: '600',
-  },
-  links: {
-    display: 'flex',
-    gap: '8px',
-    alignItems: 'center',
   },
   userSection: {
     display: 'flex',
@@ -189,6 +205,7 @@ const styles = {
     letterSpacing: '2px',
     border: '1px solid transparent',
     position: 'relative',
+    whiteSpace: 'nowrap',
   },
   activeLink: {
     color: '#00ffff',
