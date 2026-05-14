@@ -3,7 +3,7 @@
 # Cloudflared 后台启动脚本
 # 使用 nohup 让进程在 SSH 断开后继续运行
 
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MANAGER_SCRIPT="${PROJECT_DIR}/cloudflared-manager.sh"
 PID_FILE="${PROJECT_DIR}/cloudflared-manager.pid"
 LOG_FILE="${PROJECT_DIR}/cloudflared-manager.log"

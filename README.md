@@ -310,7 +310,7 @@ node virtual_robot.js
 切换模式：
 ```bash
 # 切换到 Real 模式
-./switch-network.sh devnet
+./scripts/switch-network.sh devnet
 
 # 配置 .env
 PAYMENT_MODE=real

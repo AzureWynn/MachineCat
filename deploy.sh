@@ -97,13 +97,14 @@ if command -v cloudflared &> /dev/null; then
     echo "检测到 cloudflared 已安装，可以使用自动管理脚本："
     echo ""
     echo "  启动监控模式（推荐）:"
-    echo "    bash cloudflared-manager.sh monitor"
+    echo "    bash scripts/cloudflared-manager.sh monitor"
+    
     echo ""
     echo "  其他命令:"
-    echo "    bash cloudflared-manager.sh start   # 启动 tunnel"
-    echo "    bash cloudflared-manager.sh stop    # 停止 tunnel"
-    echo "    bash cloudflared-manager.sh status  # 查看状态"
-    echo "    bash cloudflared-manager.sh logs    # 查看日志"
+    echo "    bash scripts/cloudflared-manager.sh start   # 启动 tunnel"
+    echo "    bash scripts/cloudflared-manager.sh stop    # 停止 tunnel"
+    echo "    bash scripts/cloudflared-manager.sh status  # 查看状态"
+    echo "    bash scripts/cloudflared-manager.sh logs    # 查看日志"
     echo ""
     echo "监控模式功能："
     echo "  ✓ 自动重启断开的 tunnel"
@@ -117,7 +118,7 @@ if command -v cloudflared &> /dev/null; then
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo ""
         echo "启动 cloudflared 监控模式..."
-        bash cloudflared-manager.sh monitor
+        bash scripts/cloudflared-manager.sh monitor
     fi
 else
     echo "💡 提示：安装 cloudflared 可获得自动公网访问"

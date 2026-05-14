@@ -311,7 +311,7 @@ The system supports dual-mode operation:
 Switch modes:
 ```bash
 # Switch to Real mode
-./switch-network.sh devnet
+./scripts/switch-network.sh devnet
 
 # Configure .env
 PAYMENT_MODE=real

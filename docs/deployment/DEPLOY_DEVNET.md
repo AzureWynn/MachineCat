@@ -58,7 +58,7 @@
 cd /Users/laters/work/web3/MachineCat
 
 # 切换网络配置
-./switch-network.sh devnet
+./scripts/switch-network.sh devnet
 ```
 
 ### 步骤 2：配置环境变量

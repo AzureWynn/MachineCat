@@ -2,7 +2,7 @@
 
 # Cloudflared 停止脚本
 
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PID_FILE="${PROJECT_DIR}/cloudflared-manager.pid"
 
 GREEN='\033[0;32m'
@@ -38,4 +38,4 @@ else
 fi
 
 # 停止 cloudflared 进程
-bash "${PROJECT_DIR}/cloudflared-manager.sh" stop
+bash "${PROJECT_DIR}/scripts/cloudflared-manager.sh" stop
