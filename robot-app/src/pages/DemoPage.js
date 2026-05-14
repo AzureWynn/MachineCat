@@ -20,7 +20,7 @@ function DemoPage() {
   const [txHash, setTxHash] = useState('');
   const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
-  const [signMode, setSignMode] = useState('frontend');
+  const [signMode, setSignMode] = useState('backend');
   const [paymentMode, setPaymentMode] = useState(null);
   const [paymentModeInfo, setPaymentModeInfo] = useState(null);
 
@@ -274,13 +274,18 @@ function DemoPage() {
           const initResult = await initResponse.json();
           
           if (initResult.success) {
-            const initTransaction = Transaction.from(Buffer.from(initResult.transaction, 'base64'));
-            const signedInitTx = await window.solana.signTransaction(initTransaction);
-            const initTxHash = await connection.sendRawTransaction(signedInitTx.serialize());
-            await connection.confirmTransaction(initTxHash, 'confirmed');
-            
-            console.log('Init transaction sent:', initTxHash);
-            setMessages((prev) => [...prev, { role: 'system', text: 'Robot state initialized' }]);
+            try {
+              const initTransaction = Transaction.from(Buffer.from(initResult.transaction, 'base64'));
+              const signedInitTx = await window.solana.signTransaction(initTransaction);
+              const initTxHash = await connection.sendRawTransaction(signedInitTx.serialize());
+              await connection.confirmTransaction(initTxHash, 'confirmed');
+              
+              console.log('Init transaction sent:', initTxHash);
+              setMessages((prev) => [...prev, { role: 'system', text: 'Robot state initialized' }]);
+            } catch (signError) {
+              console.error('Init transaction signing error:', signError);
+              setMessages((prev) => [...prev, { role: 'system', text: 'Failed to sign init transaction. Please reconnect wallet.' }]);
+            }
           }
         }
         
@@ -296,13 +301,74 @@ function DemoPage() {
         const buildResult = await buildResponse.json();
         
         if (!buildResult.success) {
-          throw new Error(buildResult.error);
+          setMessages((prev) => [...prev, { role: 'system', text: `Transaction build failed: ${buildResult.error}. Falling back to backend mode.` }]);
+          
+          const paymentResult = await fetch(`${API_BASE}/payment/process`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              robotId: currentRobotId,
+              paymentDetails: {
+                amount: String(quest.cost),
+                fromChain: quest.fromChain || 'ETH',
+                toChain: quest.toChain || 'SOL',
+                fromToken: 'USDC',
+                toToken: 'USDC',
+                userAddress: walletAddress,
+                questId: quest.id,
+              },
+            }),
+          });
+
+          const result = await paymentResult.json();
+          
+          if (!result.success) {
+            throw new Error(result.error);
+          }
+
+          txHash = result.data?.stateUpdate?.tx || 'mock-tx';
+          const { mode, quote, privateTx, x402 } = result.data;
+          const modeLabel = mode === 'real' ? 'Real Protocol' : 'Mock';
+
+          const logs = [
+            `Payment successful! [${modeLabel}]`,
+            `LI.FI Cross-Chain: ${quote?.fromChain || 'ETH'} -> ${quote?.toChain || 'SOL'}`,
+            `Quote: ${quote?.fromAmount || '0'} -> ${quote?.toAmount || '0'}`,
+            `MagicBlock PER Privacy: ${privateTx?.privacyLevel || 'N/A'}`,
+            `x402 Agentic Payment`,
+            `Wallet: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`,
+            `Tx: ${txHash?.substring(0, 20)}...`,
+          ];
+          
+          logs.forEach((log, index) => {
+            setTimeout(() => {
+              setMessages((prev) => [...prev, { role: 'system', text: log }]);
+            }, index * 400);
+          });
+          
+          setTimeout(() => {
+            setQuestVisible(false);
+            setTimeout(() => {
+              setQuest(null);
+              setQuestVisible(true);
+            }, 500);
+          }, logs.length * 400 + 300);
+
+          await fetchRobotState();
+          setQuest(null);
+          setLoading(false);
+          return;
         }
 
-        const transaction = Transaction.from(Buffer.from(buildResult.transaction, 'base64'));
-        const signedTx = await window.solana.signTransaction(transaction);
-        txHash = await connection.sendRawTransaction(signedTx.serialize());
-        await connection.confirmTransaction(txHash, 'confirmed');
+        try {
+          const transaction = Transaction.from(Buffer.from(buildResult.transaction, 'base64'));
+          const signedTx = await window.solana.signTransaction(transaction);
+          txHash = await connection.sendRawTransaction(signedTx.serialize());
+          await connection.confirmTransaction(txHash, 'confirmed');
+        } catch (signError) {
+          console.error('Transaction signing error:', signError);
+          throw new Error('Failed to sign transaction. Please check your wallet connection.');
+        }
         
         console.log('State update transaction sent:', txHash);
         
@@ -358,15 +424,15 @@ function DemoPage() {
           throw new Error(result.error);
         }
 
-        txHash = result.data.stateUpdate.tx;
+        txHash = result.data?.stateUpdate?.tx || 'mock-tx';
         const { mode, quote, privateTx, x402 } = result.data;
         const modeLabel = mode === 'real' ? 'Real Protocol' : 'Mock';
 
         const logs = [
           `Payment successful! [${modeLabel}]`,
-          `LI.FI Cross-Chain: ${quote.fromChain} -> ${quote.toChain}`,
-          `Quote: ${quote.fromAmount} -> ${quote.toAmount}`,
-          `MagicBlock PER Privacy: ${privateTx.privacyLevel}`,
+          `LI.FI Cross-Chain: ${quote?.fromChain || 'ETH'} -> ${quote?.toChain || 'SOL'}`,
+          `Quote: ${quote?.fromAmount || '0'} -> ${quote?.toAmount || '0'}`,
+          `MagicBlock PER Privacy: ${privateTx?.privacyLevel || 'N/A'}`,
           `x402 Agentic Payment`,
           `Wallet: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`,
           `Tx: ${txHash?.substring(0, 20)}...`,
