@@ -4,7 +4,10 @@ async function connectDB() {
   const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/robot-platform';
 
   try {
-    await mongoose.connect(mongoUri);
+    await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 15000,
+      socketTimeoutMS: 45000,
+    });
     console.log('🍃 MongoDB connected successfully');
     return true;
   } catch (error) {

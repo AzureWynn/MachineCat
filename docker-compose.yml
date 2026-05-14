@@ -13,6 +13,12 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password123
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     networks:
       - robot-network
 
@@ -89,10 +95,14 @@ services:
       - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4}
       - MQTT_SERVICE_URL=${MQTT_SERVICE_URL:-http://robot-mqtt-service:3003}
     depends_on:
-      - mongodb
-      - redis
-      - ollama
-      - robot-mqtt-service
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      ollama:
+        condition: service_started
+      robot-mqtt-service:
+        condition: service_started
     networks:
       - robot-network
 
