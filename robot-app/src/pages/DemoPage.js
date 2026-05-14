@@ -20,7 +20,6 @@ function DemoPage() {
   const [txHash, setTxHash] = useState('');
   const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
-  const [signMode, setSignMode] = useState('backend');
   const [paymentMode, setPaymentMode] = useState(null);
   const [paymentModeInfo, setPaymentModeInfo] = useState(null);
 
@@ -233,63 +232,33 @@ function DemoPage() {
     setMessages((prev) => [...prev, { role: 'system', text: 'Processing cross-chain payment...' }]);
 
     try {
-      let txHash;
+      const connection = new Connection(SOLANA_RPC_URL, 'confirmed');
+      
+      const paymentMockResponse = await fetch(`${API_BASE}/payment/process`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          robotId: currentRobotId,
+          paymentDetails: {
+            amount: String(quest.cost),
+            fromChain: quest.fromChain === 'Ethereum' ? 'ETH' : (quest.fromChain || 'ETH'),
+            toChain: quest.toChain === 'Solana' ? 'SOL' : (quest.toChain || 'SOL'),
+            fromToken: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+            toToken: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+            userAddress: walletAddress,
+          },
+        }),
+      });
 
-      if (signMode === 'frontend') {
-        const connection = new Connection(SOLANA_RPC_URL, 'confirmed');
+      const paymentMockResult = await paymentMockResponse.json();
+      
+      const stateResponse = await fetch(`${API_BASE}/solana/state/${currentRobotId}?userAddress=${walletAddress}`);
+      const stateResult = await stateResponse.json();
+      
+      if (!stateResult.success) {
+        setMessages((prev) => [...prev, { role: 'system', text: 'Initializing robot state...' }]);
         
-        const paymentMockResponse = await fetch(`${API_BASE}/payment/process`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            robotId: currentRobotId,
-            paymentDetails: {
-              amount: String(quest.cost),
-              fromChain: quest.fromChain === 'Ethereum' ? 'ETH' : (quest.fromChain || 'ETH'),
-              toChain: quest.toChain === 'Solana' ? 'SOL' : (quest.toChain || 'SOL'),
-              fromToken: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-              toToken: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-              userAddress: walletAddress,
-            },
-          }),
-        });
-
-        const paymentMockResult = await paymentMockResponse.json();
-        
-        const stateResponse = await fetch(`${API_BASE}/solana/state/${currentRobotId}?userAddress=${walletAddress}`);
-        const stateResult = await stateResponse.json();
-        
-        if (!stateResult.success) {
-          setMessages((prev) => [...prev, { role: 'system', text: 'Initializing robot state...' }]);
-          
-          const initResponse = await fetch(`${API_BASE}/solana/transaction/init`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              robotId: currentRobotId,
-              userAddress: walletAddress,
-            }),
-          });
-
-          const initResult = await initResponse.json();
-          
-          if (initResult.success) {
-            try {
-              const initTransaction = Transaction.from(Buffer.from(initResult.transaction, 'base64'));
-              const signedInitTx = await window.solana.signTransaction(initTransaction);
-              const initTxHash = await connection.sendRawTransaction(signedInitTx.serialize());
-              await connection.confirmTransaction(initTxHash, 'confirmed');
-              
-              console.log('Init transaction sent:', initTxHash);
-              setMessages((prev) => [...prev, { role: 'system', text: 'Robot state initialized' }]);
-            } catch (signError) {
-              console.error('Init transaction signing error:', signError);
-              setMessages((prev) => [...prev, { role: 'system', text: 'Failed to sign init transaction. Please reconnect wallet.' }]);
-            }
-          }
-        }
-        
-        const buildResponse = await fetch(`${API_BASE}/solana/transaction/build`, {
+        const initResponse = await fetch(`${API_BASE}/solana/transaction/init`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -298,38 +267,51 @@ function DemoPage() {
           }),
         });
 
-        const buildResult = await buildResponse.json();
+        const initResult = await initResponse.json();
         
-        if (!buildResult.success) {
-          setMessages((prev) => [...prev, { role: 'system', text: `Transaction build failed: ${buildResult.error}. Falling back to backend mode.` }]);
-          
-          const paymentResult = await fetch(`${API_BASE}/payment/process`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              robotId: currentRobotId,
-              paymentDetails: {
-                amount: String(quest.cost),
-                fromChain: quest.fromChain || 'ETH',
-                toChain: quest.toChain || 'SOL',
-                fromToken: 'USDC',
-                toToken: 'USDC',
-                userAddress: walletAddress,
-                questId: quest.id,
-              },
-            }),
-          });
-
-          const result = await paymentResult.json();
-          
-          if (!result.success) {
-            throw new Error(result.error);
+        if (initResult.success) {
+          try {
+            const initTransaction = Transaction.from(Buffer.from(initResult.transaction, 'base64'));
+            const signedInitTx = await window.solana.signTransaction(initTransaction);
+            const initTxHash = await connection.sendRawTransaction(signedInitTx.serialize());
+            await connection.confirmTransaction(initTxHash, 'confirmed');
+            
+            console.log('Init transaction sent:', initTxHash);
+            setMessages((prev) => [...prev, { role: 'system', text: 'Robot state initialized' }]);
+          } catch (signError) {
+            console.error('Init transaction signing error:', signError);
+            setMessages((prev) => [...prev, { role: 'system', text: 'Failed to sign init transaction. Please reconnect wallet.' }]);
           }
+        }
+      }
+      
+      const buildResponse = await fetch(`${API_BASE}/solana/transaction/build`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          robotId: currentRobotId,
+          userAddress: walletAddress,
+        }),
+      });
 
-          txHash = result.data?.stateUpdate?.tx || 'mock-tx';
-          const { mode, quote, privateTx, x402 } = result.data;
+      const buildResult = await buildResponse.json();
+      
+      if (!buildResult.success) {
+        throw new Error(buildResult.error || 'Failed to build transaction');
+      }
+
+      try {
+        const transaction = Transaction.from(Buffer.from(buildResult.transaction, 'base64'));
+        const signedTx = await window.solana.signTransaction(transaction);
+        const txHash = await connection.sendRawTransaction(signedTx.serialize());
+        await connection.confirmTransaction(txHash, 'confirmed');
+        
+        console.log('State update transaction sent:', txHash);
+        
+        if (paymentMockResult.success) {
+          const { quote, privateTx, x402, mode } = paymentMockResult.data;
           const modeLabel = mode === 'real' ? 'Real Protocol' : 'Mock';
-
+          
           const logs = [
             `Payment successful! [${modeLabel}]`,
             `LI.FI Cross-Chain: ${quote?.fromChain || 'ETH'} -> ${quote?.toChain || 'SOL'}`,
@@ -353,104 +335,10 @@ function DemoPage() {
               setQuestVisible(true);
             }, 500);
           }, logs.length * 400 + 300);
-
-          await fetchRobotState();
-          setQuest(null);
-          setLoading(false);
-          return;
         }
-
-        try {
-          const transaction = Transaction.from(Buffer.from(buildResult.transaction, 'base64'));
-          const signedTx = await window.solana.signTransaction(transaction);
-          txHash = await connection.sendRawTransaction(signedTx.serialize());
-          await connection.confirmTransaction(txHash, 'confirmed');
-        } catch (signError) {
-          console.error('Transaction signing error:', signError);
-          throw new Error('Failed to sign transaction. Please check your wallet connection.');
-        }
-        
-        console.log('State update transaction sent:', txHash);
-        
-        if (paymentMockResult.success) {
-          const { quote, privateTx, x402, mode } = paymentMockResult.data;
-          const modeLabel = mode === 'real' ? 'Real Protocol' : 'Mock';
-          
-          const logs = [
-            `Payment successful! [${modeLabel}]`,
-            `LI.FI Cross-Chain: ${quote.fromChain} -> ${quote.toChain}`,
-            `Quote: ${quote.fromAmount} -> ${quote.toAmount}`,
-            `MagicBlock PER Privacy: ${privateTx.privacyLevel}`,
-            `x402 Agentic Payment`,
-            `Wallet: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`,
-            `Tx: ${txHash?.substring(0, 20)}...`,
-          ];
-          
-          logs.forEach((log, index) => {
-            setTimeout(() => {
-              setMessages((prev) => [...prev, { role: 'system', text: log }]);
-            }, index * 400);
-          });
-          
-          setTimeout(() => {
-            setQuestVisible(false);
-            setTimeout(() => {
-              setQuest(null);
-              setQuestVisible(true);
-            }, 500);
-          }, logs.length * 400 + 300);
-        }
-      } else {
-        const paymentResult = await fetch(`${API_BASE}/payment/process`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            robotId: currentRobotId,
-            paymentDetails: {
-              amount: String(quest.cost),
-              fromChain: quest.fromChain || 'ETH',
-              toChain: quest.toChain || 'SOL',
-              fromToken: 'USDC',
-              toToken: 'USDC',
-              userAddress: walletAddress,
-              questId: quest.id,
-            },
-          }),
-        });
-
-        const result = await paymentResult.json();
-        
-        if (!result.success) {
-          throw new Error(result.error);
-        }
-
-        txHash = result.data?.stateUpdate?.tx || 'mock-tx';
-        const { mode, quote, privateTx, x402 } = result.data;
-        const modeLabel = mode === 'real' ? 'Real Protocol' : 'Mock';
-
-        const logs = [
-          `Payment successful! [${modeLabel}]`,
-          `LI.FI Cross-Chain: ${quote?.fromChain || 'ETH'} -> ${quote?.toChain || 'SOL'}`,
-          `Quote: ${quote?.fromAmount || '0'} -> ${quote?.toAmount || '0'}`,
-          `MagicBlock PER Privacy: ${privateTx?.privacyLevel || 'N/A'}`,
-          `x402 Agentic Payment`,
-          `Wallet: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`,
-          `Tx: ${txHash?.substring(0, 20)}...`,
-        ];
-        
-        logs.forEach((log, index) => {
-          setTimeout(() => {
-            setMessages((prev) => [...prev, { role: 'system', text: log }]);
-          }, index * 400);
-        });
-        
-        setTimeout(() => {
-          setQuestVisible(false);
-          setTimeout(() => {
-            setQuest(null);
-            setQuestVisible(true);
-          }, 500);
-        }, logs.length * 400 + 300);
+      } catch (signError) {
+        console.error('Transaction signing error:', signError);
+        throw new Error('Failed to sign transaction. Please check your wallet connection.');
       }
 
       await fetchRobotState();
