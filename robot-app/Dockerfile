@@ -1,5 +1,8 @@
 FROM node:20-alpine AS build
 
+# Install Python and build tools for native modules (e.g., usb from @solana/web3.js)
+RUN apk add --no-cache python3 make g++
+
 WORKDIR /app
 
 COPY package*.json ./
