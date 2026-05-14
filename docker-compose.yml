@@ -28,6 +28,24 @@ services:
     networks:
       - robot-network
 
+  # MQTT Service (独立服务，包含 Broker 和管理 API)
+  robot-mqtt-service:
+    build:
+      context: ./robot-mqtt-service
+      dockerfile: Dockerfile
+    container_name: robot-mqtt-service
+    restart: always
+    ports:
+      - "3003:3003"
+      - "1883:1883"
+      - "9001:9001"
+    environment:
+      - MQTT_BROKER_URL=mqtt://localhost:1883
+      - HTTP_PORT=3003
+      - MQTT_TOPIC_PREFIX=robot
+    networks:
+      - robot-network
+
   # Ollama LLM 服务
   ollama:
     image: ollama/ollama:latest
@@ -69,10 +87,12 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.openai.com/v1}
       - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4}
+      - MQTT_SERVICE_URL=${MQTT_SERVICE_URL:-http://robot-mqtt-service:3003}
     depends_on:
       - mongodb
       - redis
       - ollama
+      - robot-mqtt-service
     networks:
       - robot-network
 
