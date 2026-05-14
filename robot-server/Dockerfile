@@ -1,7 +1,7 @@
 FROM node:20-alpine
 
-# Install Python, build tools, and Linux headers for native modules (e.g., usb)
-RUN apk add --no-cache python3 make g++ linux-headers
+# Install Python, build tools, Linux headers, and udev headers for native modules (e.g., usb)
+RUN apk add --no-cache python3 make g++ linux-headers eudev-dev
 
 WORKDIR /app
 
