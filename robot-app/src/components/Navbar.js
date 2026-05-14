@@ -42,7 +42,7 @@ function Navbar() {
           <span className="navbar-hamburger-line" />
           <span className="navbar-hamburger-line" />
         </button>
-        <div className={`navbar-links ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className={`navbar-links ${mobileMenuOpen ? 'open' : ''}`} style={styles.navLinks}>
           <Link
             to="/"
             className="navbar-link"
@@ -98,15 +98,18 @@ function Navbar() {
           >
             DEMO
           </Link>
-          {user && (
-            <div className="navbar-user-section" style={styles.userSection}>
-              <span style={styles.userName}>{user.nickname || user.email}</span>
-              <button style={styles.logoutBtn} onClick={handleLogout}>
-                LOGOUT
-              </button>
-            </div>
-          )}
         </div>
+        {user && (
+          <div
+            className={`navbar-user-section ${mobileMenuOpen ? 'mobile-visible' : ''}`}
+            style={styles.userSection}
+          >
+            <span style={styles.userName}>{user.nickname || user.email}</span>
+            <button style={styles.logoutBtn} onClick={handleLogout}>
+              LOGOUT
+            </button>
+          </div>
+        )}
       </div>
       <div style={styles.neonLine} />
     </nav>
@@ -131,6 +134,14 @@ const styles = {
     maxWidth: '1200px',
     margin: '0 auto',
     position: 'relative',
+    gap: '16px',
+  },
+  navLinks: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    flex: '1',
+    justifyContent: 'center',
   },
   neonLine: {
     height: '1px',

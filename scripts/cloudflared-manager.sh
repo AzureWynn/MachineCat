@@ -11,6 +11,10 @@ CLOUDFLARED_LOG="${PROJECT_DIR}/cloudflared.log"
 CLOUDFLARED_PID_FILE="${PROJECT_DIR}/cloudflared.pid"
 DOMAIN_CONFIG_FILE="${PROJECT_DIR}/.cloudflared-domain"
 
+# 日志轮转配置
+LOG_MAX_SIZE="${CLOUDFLARED_LOG_MAX_SIZE:-10}"  # 日志最大大小（MB）
+LOG_MAX_FILES="${CLOUDFLARED_LOG_MAX_FILES:-5}"  # 保留的日志文件数量
+
 # 自动检测当前 Git 分支，如果不在 git 仓库中则使用 main
 if git rev-parse --is-inside-work-tree &>/dev/null 2>&1; then
     GIT_BRANCH="${CLOUDFLARED_GIT_BRANCH:-$(git branch --show-current 2>/dev/null || echo main)}"
@@ -45,6 +49,40 @@ log_error() {
 
 log_debug() {
     echo -e "${BLUE}[DEBUG]${NC} $(date '+%Y-%m-%d %H:%M:%S') $1"
+}
+
+# 日志轮转函数
+rotate_log() {
+    if [ ! -f "$CLOUDFLARED_LOG" ]; then
+        return
+    fi
+    
+    # 获取日志文件大小（MB）
+    local log_size=$(du -m "$CLOUDFLARED_LOG" 2>/dev/null | cut -f1)
+    
+    if [ "$log_size" -ge "$LOG_MAX_SIZE" ]; then
+        log_info "日志文件超过 ${LOG_MAX_SIZE}MB，执行轮转 (当前: ${log_size}MB)"
+        
+        # 删除最旧的日志文件
+        if [ -f "${CLOUDFLARED_LOG}.${LOG_MAX_FILES}" ]; then
+            rm -f "${CLOUDFLARED_LOG}.${LOG_MAX_FILES}"
+        fi
+        
+        # 滚动重命名
+        for ((i=LOG_MAX_FILES-1; i>=1; i--)); do
+            if [ -f "${CLOUDFLARED_LOG}.$i" ]; then
+                mv "${CLOUDFLARED_LOG}.$i" "${CLOUDFLARED_LOG}.$((i+1))"
+            fi
+        done
+        
+        # 当前日志重命名为 .1
+        mv "$CLOUDFLARED_LOG" "${CLOUDFLARED_LOG}.1"
+        
+        # 创建新的空日志文件
+        touch "$CLOUDFLARED_LOG"
+        
+        log_info "日志轮转完成，保留最近 ${LOG_MAX_FILES} 个文件"
+    fi
 }
 
 # 检查 cloudflared 是否已安装
@@ -370,6 +408,11 @@ monitor() {
         if [ $((check_count % 6)) -eq 0 ]; then
             local current_url=$(get_current_url)
             log_info "监控心跳正常 (已检查 ${check_count} 次) | 当前 URL: ${current_url:-无}"
+        fi
+        
+        # 每 60 次检查（约 10 分钟）执行一次日志轮转
+        if [ $((check_count % 60)) -eq 0 ]; then
+            rotate_log
         fi
         
         if ! is_running; then
