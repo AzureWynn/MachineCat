@@ -300,45 +300,40 @@ function DemoPage() {
         throw new Error(buildResult.error || 'Failed to build transaction');
       }
 
-      try {
-        const transaction = Transaction.from(Buffer.from(buildResult.transaction, 'base64'));
-        const signedTx = await window.solana.signTransaction(transaction);
-        const txHash = await connection.sendRawTransaction(signedTx.serialize());
-        await connection.confirmTransaction(txHash, 'confirmed');
+      const transaction = Transaction.from(Buffer.from(buildResult.transaction, 'base64'));
+      const signedTx = await window.solana.signTransaction(transaction);
+      const txHash = await connection.sendRawTransaction(signedTx.serialize());
+      await connection.confirmTransaction(txHash, 'confirmed');
+      
+      console.log('State update transaction sent:', txHash);
+      
+      if (paymentMockResult.success) {
+        const { quote, privateTx, x402, mode } = paymentMockResult.data;
+        const modeLabel = mode === 'real' ? 'Real Protocol' : 'Mock';
         
-        console.log('State update transaction sent:', txHash);
+        const logs = [
+          `Payment successful! [${modeLabel}]`,
+          `LI.FI Cross-Chain: ${quote?.fromChain || 'ETH'} -> ${quote?.toChain || 'SOL'}`,
+          `Quote: ${quote?.fromAmount || '0'} -> ${quote?.toAmount || '0'}`,
+          `MagicBlock PER Privacy: ${privateTx?.privacyLevel || 'N/A'}`,
+          `x402 Agentic Payment`,
+          `Wallet: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`,
+          `Tx: ${txHash?.substring(0, 20)}...`,
+        ];
         
-        if (paymentMockResult.success) {
-          const { quote, privateTx, x402, mode } = paymentMockResult.data;
-          const modeLabel = mode === 'real' ? 'Real Protocol' : 'Mock';
-          
-          const logs = [
-            `Payment successful! [${modeLabel}]`,
-            `LI.FI Cross-Chain: ${quote?.fromChain || 'ETH'} -> ${quote?.toChain || 'SOL'}`,
-            `Quote: ${quote?.fromAmount || '0'} -> ${quote?.toAmount || '0'}`,
-            `MagicBlock PER Privacy: ${privateTx?.privacyLevel || 'N/A'}`,
-            `x402 Agentic Payment`,
-            `Wallet: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`,
-            `Tx: ${txHash?.substring(0, 20)}...`,
-          ];
-          
-          logs.forEach((log, index) => {
-            setTimeout(() => {
-              setMessages((prev) => [...prev, { role: 'system', text: log }]);
-            }, index * 400);
-          });
-          
+        logs.forEach((log, index) => {
           setTimeout(() => {
-            setQuestVisible(false);
-            setTimeout(() => {
-              setQuest(null);
-              setQuestVisible(true);
-            }, 500);
-          }, logs.length * 400 + 300);
-        }
-      } catch (signError) {
-        console.error('Transaction signing error:', signError);
-        throw new Error('Failed to sign transaction. Please check your wallet connection.');
+            setMessages((prev) => [...prev, { role: 'system', text: log }]);
+          }, index * 400);
+        });
+        
+        setTimeout(() => {
+          setQuestVisible(false);
+          setTimeout(() => {
+            setQuest(null);
+            setQuestVisible(true);
+          }, 500);
+        }, logs.length * 400 + 300);
       }
 
       await fetchRobotState();

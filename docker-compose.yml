@@ -81,6 +81,7 @@ services:
       - REDIS_URL=redis://redis:6379
       - SOLANA_NETWORK=${SOLANA_NETWORK:-DEVNET}
       - SOLANA_RPC_URL=${SOLANA_RPC_URL:-https://api.devnet.solana.com}
+      - SOLANA_WALLET_SECRET_KEY=${SOLANA_WALLET_SECRET_KEY:-}
       - ROBOT_STATE_PROGRAM_ID=${ROBOT_STATE_PROGRAM_ID:-ARjXV5jAyB1t53WE4c3eEf6gftFnF7aiympwBCfSvVoY}
       - PAYMENT_MODE=${PAYMENT_MODE:-mock}
       - LIFI_API_KEY=${LIFI_API_KEY:-}
