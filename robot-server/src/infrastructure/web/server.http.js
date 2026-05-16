@@ -19,6 +19,7 @@ const solanaService = require('../../core/blockchain/solana.service');
 const paymentRouter = require('./routes/payment.routes');
 const paymentService = require('../../core/blockchain/payment.service');
 const { router: authRouter } = require('./routes/auth.routes');
+const defiRouter = require('./routes/defi.routes');
 
 console.log('[Env] LLM_API_URL:', process.env.LLM_API_URL);
 console.log('[Env] LLM_MODEL:', process.env.LLM_MODEL);
@@ -46,6 +47,7 @@ app.use(staticDataRouter.routes()).use(staticDataRouter.allowedMethods());
 app.use(speechRouter.routes()).use(speechRouter.allowedMethods());
 app.use(solanaRouter.routes()).use(solanaRouter.allowedMethods());
 app.use(paymentRouter.routes()).use(paymentRouter.allowedMethods());
+app.use(defiRouter.routes()).use(defiRouter.allowedMethods());
 
 const PORT = process.env.PORT || 3002;
 const ROBOT_IP = process.env.ROBOT_IP || '192.168.4.1';

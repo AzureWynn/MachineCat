@@ -73,6 +73,14 @@ function LoginPage() {
     }
   };
 
+  const getWalletProvider = () => {
+    if (window.okxwallet?.solana) return { provider: window.okxwallet.solana, name: 'OKX Wallet' };
+    if (window.okxwallet) return { provider: window.okxwallet, name: 'OKX Wallet' };
+    if (window.solana && window.solana.isPhantom) return { provider: window.solana, name: 'Phantom' };
+    if (window.solana) return { provider: window.solana, name: 'Solana' };
+    return { provider: null, name: null };
+  };
+
   const connectWallet = async () => {
     setLoading(true);
     setError('');
@@ -81,27 +89,29 @@ function LoginPage() {
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const currentUrl = window.location.href;
 
-    if (window.solana && window.solana.isPhantom) {
+    const { provider, name } = getWalletProvider();
+
+    if (provider) {
       try {
-        const response = await window.solana.connect();
+        const response = await provider.connect();
         const address = response.publicKey.toString();
         setWalletAddress(address);
-        await handleWalletLogin(address);
+        await handleWalletLogin(address, provider);
       } catch (err) {
         setError('Wallet connection cancelled');
         setLoading(false);
       }
     } else if (isMobile && !isLocalhost) {
       const encodedUrl = encodeURIComponent(currentUrl);
-      window.location.href = `https://phantom.app/ul/browse/${encodedUrl}`;
+      window.location.href = `https://www.okx.com/download?deeplink=${encodedUrl}`;
     } else {
-      window.open('https://phantom.app/', '_blank');
-      setError('Please install Phantom wallet');
+      window.open('https://www.okx.com/download', '_blank');
+      setError('Please install OKX Wallet or Phantom');
       setLoading(false);
     }
   };
 
-  const handleWalletLogin = async (address) => {
+  const handleWalletLogin = async (address, provider) => {
     try {
       const nonceResponse = await fetch(`${API_BASE}/auth/nonce`);
       const nonceResult = await nonceResponse.json();
@@ -112,7 +122,7 @@ function LoginPage() {
 
       const message = nonceResult.data.message;
       const messageBytes = new TextEncoder().encode(message);
-      const signed = await window.solana.signMessage(messageBytes, 'utf8');
+      const signed = await provider.signMessage(messageBytes, 'utf8');
 
       const bs58 = await import('bs58');
       const signature = bs58.default.encode(signed.signature);

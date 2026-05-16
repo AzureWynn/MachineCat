@@ -8,6 +8,7 @@ import PersonalityPage from './pages/PersonalityPage';
 import ChatPage from './pages/ChatPage';
 import ControlPage from './pages/ControlPage';
 import DemoPage from './pages/DemoPage';
+import DeFiPage from './pages/DeFiPage';
 import LoginPage from './pages/LoginPage';
 
 function ProtectedRoute({ children }) {
@@ -48,6 +49,7 @@ function App() {
             <Route path="chat" element={<ChatPage />} />
             <Route path="control" element={<ControlPage />} />
             <Route path="demo" element={<DemoPage />} />
+            <Route path="defi" element={<DeFiPage />} />
           </Route>
         </Routes>
       </div>

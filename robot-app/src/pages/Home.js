@@ -56,6 +56,17 @@ function Home() {
             Control Panel →
           </Link>
         </div>
+
+        <div style={styles.card}>
+          <div style={styles.cardIcon}>💰</div>
+          <h3 style={styles.cardTitle}>DeFi</h3>
+          <p style={styles.cardDesc}>
+            OKX DeFi yield & market data
+          </p>
+          <Link to="/defi" style={styles.cardButton}>
+            Explore DeFi →
+          </Link>
+        </div>
       </div>
 
       {currentRobotId && (
@@ -111,9 +122,11 @@ const styles = {
   },
   cards: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '20px',
     marginBottom: '40px',
+    maxWidth: '800px',
+    margin: '0 auto 40px',
   },
   card: {
     backgroundColor: 'rgba(255, 255, 255, 0.03)',

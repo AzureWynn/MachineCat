@@ -98,6 +98,17 @@ function Navbar() {
           >
             DEMO
           </Link>
+          <Link
+            to="/defi"
+            className="navbar-link"
+            style={{
+              ...styles.link,
+              ...(isActive('/defi') ? styles.activeLink : {}),
+            }}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            DeFi
+          </Link>
         </div>
         {user && (
           <div

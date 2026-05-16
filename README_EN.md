@@ -21,7 +21,7 @@
 - 📄 [Devnet Deployment Guide](DEPLOY_DEVNET.md) - Deployment steps and configuration
 
 ### Live Demo
-🌐 **https://scuba-biblical-specified-distinguished.trycloudflare.com**
+🌐 **https://bu-zhai.vercel.app/**
 
 ### Demo Video
 🎬 **https://youtu.be/EfRvZO4WACY**
