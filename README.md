@@ -8,6 +8,12 @@
 
 ## 🏆 黑客松提交信息
 
+### 参赛信息
+- **赛道：** Builder Track（代码赛道）
+- **Participant ID：** `2055666472079855616`
+- **提交 PR：** https://github.com/xerpa-ai/xagt-plugin/pull/6
+- **使用的 OKX Skills：** `okx-defi-invest`（DeFi 收益查询）、`okx-dex-swap`（DEX 交易）、`okx-agentic-wallet`（钱包集成）
+
 ### 合约部署地址
 - **网络：** Solana Devnet
 - **Program ID：** `ARjXV5jAyB1t53WE4c3eEf6gftFnF7aiympwBCfSvVoY`
