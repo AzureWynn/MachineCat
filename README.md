@@ -13,6 +13,8 @@
 - **Participant ID：** `2055666472079855616`
 - **提交 PR：** https://github.com/xerpa-ai/xagt-plugin/pull/6
 - **使用的 OKX Skills：** `okx-defi-invest`（DeFi 收益查询）、`okx-dex-swap`（DEX 交易）、`okx-agentic-wallet`（钱包集成）
+- **项目描述：** AI 陪伴型机器猫，集成 OKX DeFi 数据查询与多钱包支持，为独居女性提供情感陪伴与财务健康功能
+- **参赛亮点：** 已有实体 1.0 版本的 AI 陪伴型机器猫，通过 OKX skill suite 实现链上数据查询、多钱包连接与情感化交互，构建完整的 AI Agent 闭环体验。
 
 ### 合约部署地址
 - **网络：** Solana Devnet
@@ -36,7 +38,11 @@
 
 机器猫是一个高度个性化、可扩展的智能机器猫交互平台。通过软件定义，我们为机器猫赋予名字、种类、品种和可定制的性格特征，并结合大型语言模型（LLM）实现真正的情感化智能交互。
 
-**黑客松亮点**：实现"AI 任务生成 → 用户确认 → 跨链支付 → 链上状态更新"的完整闭环，展示 Agent 跨链隐私支付的实际应用场景。
+**黑客松亮点**：
+- **Agentic AI 伴侣**：机器猫主动理解用户需求，通过 LLM 驱动的情感对话提供陪伴，并鼓励用户走出家门、拥抱外部世界
+- **OKX DeFi 数据集成**：集成 `okx-defi-invest` 技能，实时查询 DeFi 收益（APY）和 TVL 数据，为用户提供财务健康建议
+- **OKX 钱包支持**：支持 OKX Wallet 和 Phantom 钱包连接，实现链上状态管理和交互
+- **完整闭环**：实现"AI 任务生成 → 用户确认 → 跨链支付 → 链上状态更新"的完整流程，展示 Agent 跨链隐私支付的实际应用场景
 
 ### ✨ 核心特性
 
@@ -133,8 +139,8 @@ MachineCat/
 │   └── README.md                 # 合约文档
 │
 ├── robot-sim-ros2/               # ROS2 + Gazebo 仿真
-│   ├── src/machinecat_robot/     # ROS2 机器人包
-│   │   ├── urdf/                 # URDF 机器人模型
+│   ├── src/machinecat_robot/     # ROS2 机器猫包
+│   │   ├── urdf/                 # URDF 机器猫模型
 │   │   ├── launch/               # 启动文件
 │   │   ├── scripts/              # Python 控制脚本
 │   │   └── worlds/               # Gazebo 世界文件
@@ -338,7 +344,7 @@ LIFI_API_KEY=your_key_here
 9. **前端展示结果**：显示支付成功和状态变化
 
 **Solana 在用户旅程中的核心作用：**
-- 机器人状态存储在 Solana 链上（PDA 账户）
+- 机器猫状态存储在 Solana 链上（PDA 账户）
 - 所有支付通过 Solana 完成
 - 合约是 AI 代理和用户交互的核心基础设施
 

@@ -7,6 +7,7 @@ export const useStore = create((set, get) => ({
   wsStatus: 'disconnected',
   batteryLevel: null,
   currentRobotId: localStorage.getItem('currentRobotId') || '',
+  currentRobotName: localStorage.getItem('currentRobotName') || '',
   messages: [],
   personality: null,
 
@@ -31,6 +32,11 @@ export const useStore = create((set, get) => ({
   setCurrentRobotId: (robotId) => {
     localStorage.setItem('currentRobotId', robotId);
     set({ currentRobotId: robotId });
+  },
+
+  setCurrentRobotName: (name) => {
+    localStorage.setItem('currentRobotName', name);
+    set({ currentRobotName: name });
   },
 
   setPersonality: (personality) => {

@@ -8,6 +8,14 @@
 
 ## 🏆 Hackathon Submission Info
 
+### Submission Info
+- **Track:** Builder Track
+- **Participant ID:** `2055666472079855616`
+- **Submission PR:** https://github.com/xerpa-ai/xagt-plugin/pull/6
+- **OKX Skills Used:** `okx-defi-invest` (DeFi yield query), `okx-dex-swap` (DEX trading), `okx-agentic-wallet` (wallet integration)
+- **Description:** AI companionship robot cat with OKX DeFi data integration and multi-wallet support, providing emotional companionship and financial wellness for women living alone
+- **Highlight:** AI companion robot cat with v1.0 hardware exists, leveraging OKX skill suite for on-chain data query, multi-wallet connection and emotional interaction, building a complete AI Agent experience
+
 ### Contract Deployment Address
 - **Network:** Solana Devnet
 - **Program ID:** `ARjXV5jAyB1t53WE4c3eEf6gftFnF7aiympwBCfSvVoY`
@@ -30,7 +38,11 @@
 
 Robot Cat is a highly personalized, scalable smart robot cat interaction platform. Through software definition, we endow robot cats with names, types, breeds, and customizable personality traits, combined with Large Language Models (LLM) for truly emotional intelligent interaction.
 
-**Hackathon Highlight**: Implementing a complete closed loop of "AI Task Generation → User Confirmation → Cross-Chain Payment → On-Chain State Update", demonstrating practical application scenarios of Agent cross-chain privacy payments.
+**Hackathon Highlights**:
+- **Agentic AI Companion**: Robot cat proactively understands user needs, provides companionship through LLM-driven emotional conversations, and encourages users to step outside and embrace the world
+- **OKX DeFi Data Integration**: Integrates `okx-defi-invest` skill to query real-time DeFi yields (APY) and TVL data, providing financial wellness advice to users
+- **OKX Wallet Support**: Supports OKX Wallet and Phantom wallet connections for on-chain state management and interactions
+- **Complete Closed Loop**: Implements "AI Task Generation → User Confirmation → Cross-Chain Payment → On-Chain State Update" workflow, demonstrating practical Agent cross-chain privacy payment scenarios
 
 ### ✨ Core Features
 

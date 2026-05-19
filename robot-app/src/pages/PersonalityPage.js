@@ -5,7 +5,7 @@ import { personalityAPI, staticDataAPI } from '../services/api';
 
 function PersonalityPage() {
   const navigate = useNavigate();
-  const { currentRobotId, setCurrentRobotId, setPersonality } = useStore();
+  const { currentRobotId, setCurrentRobotId, currentRobotName, setCurrentRobotName, setPersonality } = useStore();
 
   const [robotTypes, setRobotTypes] = useState([]);
   const [traits, setTraits] = useState([]);
@@ -13,13 +13,14 @@ function PersonalityPage() {
 
   const [formData, setFormData] = useState({
     robotId: currentRobotId || '',
-    name: '',
+    name: currentRobotName || '',
     type: '',
     traits: {},
   });
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
     loadStaticData();
@@ -79,9 +80,11 @@ function PersonalityPage() {
       const { robotId, ...data } = formData;
       const response = await personalityAPI.createOrUpdate(robotId, data);
       setCurrentRobotId(robotId);
+      setCurrentRobotName(formData.name);
       setPersonality(response.data);
       setMessage('个性设置保存成功！');
-      setTimeout(() => navigate('/demo'), 1500);
+      setRedirecting(true);
+      setTimeout(() => navigate('/defi'), 1500);
     } catch (error) {
       setMessage('保存失败：' + (error.response?.data?.error || error.message));
     } finally {
@@ -169,8 +172,8 @@ function PersonalityPage() {
           ))}
         </div>
 
-        <button type="submit" style={styles.button} disabled={loading}>
-          {loading ? '[ SAVING... ]' : '[ SAVE ]'}
+        <button type="submit" style={styles.button} disabled={loading || redirecting}>
+          {redirecting ? '[ REDIRECTING... ]' : loading ? '[ SAVING... ]' : '[ SAVE ]'}
         </button>
 
         {message && (
